@@ -125,7 +125,7 @@
 
 ## 12 · 收尾 —— 0:10
 
-> Everything you've seen is in one repository — the code, the instructions, and the evidence behind every number. Thank you. Happy to take questions.
+> Everything is in one repository: the code, the instructions and a derived extract of the data, so anyone can re-run our analysis and check every number. Thank you. Happy to take questions.
 
 *镜头：回到正视镜头，笑一下再结束录制（留 2 秒尾巴给剪辑）。*
 
