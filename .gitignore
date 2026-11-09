@@ -2,3 +2,12 @@ data/raw/
 *.xlsx
 ~$*
 __pycache__/
+
+# Raw downloads (re-downloadable, not committed)
+Datasets/*.xml
+Datasets/*.geojson
+Datasets/*.pdf
+
+# External validation caches (re-downloadable)
+Datasets/owid_*.csv
+Datasets/worldbank_population.json

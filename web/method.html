@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Method — The Power-Hungry World</title>
+<style>
+:root { --ink:#1a1a2e; --accent:#16213e; --muted:#5b6070; --line:#e2e4ea; --bg:#ffffff; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.55; }
+nav { position:sticky; top:0; background:var(--accent); color:#fff; padding:12px 24px; display:flex; gap:24px; z-index:10; }
+nav a { color:#fff; text-decoration:none; font-weight:600; }
+nav a:hover { text-decoration:underline; }
+header { padding:36px 24px 8px; border-bottom:1px solid var(--line); }
+h1 { margin:0 0 4px; font-size:28px; }
+.subtitle { color:var(--muted); margin:0 0 8px; }
+.meta { color:var(--muted); font-size:14px; margin:0; }
+section { padding:20px 24px; max-width:1200px; margin:0 auto; }
+#key-figures { display:flex; flex-wrap:wrap; gap:16px; }
+.kf { flex:1 1 150px; border:1px solid var(--line); border-radius:8px; padding:14px; text-align:center; }
+.kf .num { font-size:24px; font-weight:700; }
+.kf .lbl { color:var(--muted); font-size:13px; }
+.chart { border:1px solid var(--line); border-radius:10px; padding:16px; margin:20px 0; }
+.chart h3 { margin-top:0; }
+.caption { color:var(--muted); font-size:14px; }
+.buttons { margin-top:8px; display:flex; gap:10px; }
+.buttons a { display:inline-block; padding:6px 12px; border:1px solid var(--accent); border-radius:6px;
+             color:var(--accent); text-decoration:none; font-size:13px; font-weight:600; }
+.buttons a:hover { background:var(--accent); color:#fff; }
+h2 { border-bottom:1px solid var(--line); padding-bottom:6px; }
+.step { margin:10px 0; padding:10px 14px; border-left:3px solid var(--accent); background:#f7f8fa; }
+.step a { color:var(--accent); }
+table { border-collapse:collapse; width:100%; font-size:14px; }
+th,td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+th { background:#f7f8fa; }
+pre { background:#f4f4f7; padding:12px; border-radius:6px; overflow-x:auto; font-size:13px; }
+code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+ul { padding-left:22px; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Outputs</a><a href="#overview">Method</a><a href="index.html#data-dictionary">Data dictionary</a><a href="index.html#files">Files</a></nav>
+<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to eight outputs</p></header>
+<section id="overview">
+<h2>Overview</h2>
+<pre>un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)
+        │                              │
+UN_CL_AREA_codelist.xml ─┐            TWh = OBS_VALUE / 3600
+ne_50m geojson ──────────┴─► country_region.csv ─► analysis_country_year.csv
+                                                          │
+                                              analysis_region_year.csv
+                                                          │
+                                   eight figures + this dashboard</pre>
+<p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, <code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, <code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, <code>analysis_region_year.csv</code>.</p>
+</section>
+<section id="shared">
+<h2>Shared preparation</h2>
+<h3>TWh conversion</h3><p>Every value is stored in TJ by the UN service (the UNIT label reads HSO but the number is TJ). Convert with:</p><pre><code>TWh = OBS_VALUE / 3600
+# e.g. China 2022 FEC: 29,518,462 TJ / 3600 = 8,200 TWh</code></pre>
+<h3>Sector composition</h3><p>Services_Other is the row-wise sum of three components (missing values skipped). The parent B47_123 is never added:</p><pre><code>Services_Other = B48_1232 + B49_1235 + B51_1234  (min_count=1)
+# B47_123 is the parent aggregate and MUST NOT be included</code></pre>
+<h3>Region derivation</h3><p>Each CL_AREA country has a Parent (subregion); a static table maps subregion to continent because subregions have no parent:</p><pre><code>SUBREGION_TO_REGION = {'155':'Europe', '151':'Europe', ..., '053':'Oceania'}
+region = SUBREGION_TO_REGION[subregion_of(code)]</code></pre>
+<h3>ISO / map link</h3><p>Natural Earth polygons expose UN_A3 (the UN numeric code); the map is coloured by matching REF_AREA to UN_A3:</p><pre><code>fig = px.choropleth(d, geojson=geojson, locations='map_code',
+                    featureidkey='properties.UN_A3', ...)</code></pre>
+</section>
+<section id="o1">
+<h2>Output 1 — Global trend</h2>
+<h3>Input</h3><p>analysis_country_year.csv: code, area, year, FEC.</p>
+<h3>Transformation</h3><p>Group by year and sum FEC (all reporting); build the fixed sample as the codes present in 1990 and sum FEC for those codes per year.</p>
+<h3>Code</h3><pre><code>world = df.groupby('year')['FEC'].sum()
+fixed = set(df[df.year == 1990]['code'])
+fixed_s = df[df.code.isin(fixed)].groupby('year')['FEC'].sum()
+fig = px.line(...)  # two series</code></pre>
+<h3>Chart specification</h3><p>Line chart, x=year, y=FEC (TWh), two series (all reporting vs fixed sample). Caption must disclose the ex-Soviet 1990-91 coverage effect.</p>
+</section>
+<section id="o2">
+<h2>Output 2 — Top 10 consumers</h2>
+<h3>Input</h3><p>analysis_country_year.csv filtered to year == 2022.</p>
+<h3>Transformation</h3><p>Take the 10 largest FEC values with nlargest(10), sort ascending, plot as a horizontal bar.</p>
+<h3>Code</h3><pre><code>d = df[df.year == 2022].nlargest(10, 'FEC').sort_values('FEC')
+fig = px.bar(d, x='FEC', y='area', orientation='h')</code></pre>
+<h3>Chart specification</h3><p>Horizontal bar, x=FEC (TWh), y=country, ranked.</p>
+</section>
+<section id="o3">
+<h2>Output 3 — Regional trends</h2>
+<h3>Input</h3><p>analysis_region_year.csv (region, year, FEC), excluding World.</p>
+<h3>Transformation</h3><p>Filter out the World row and plot one line per region.</p>
+<h3>Code</h3><pre><code>d = reg[reg.region != 'World']
+fig = px.line(d, x='year', y='FEC', color='region')</code></pre>
+<h3>Chart specification</h3><p>Multi-line chart, x=year, y=FEC (TWh), one line per continent.</p>
+</section>
+<section id="o4">
+<h2>Output 4 — Sector structure</h2>
+<h3>Input</h3><p>analysis_country_year.csv, years 1990 and 2022, sector columns.</p>
+<h3>Transformation</h3><p>Sum the four sector columns across all countries for each year, normalise to 100%, stack by sector.</p>
+<h3>Code</h3><pre><code>totals = d[['Industry','Transport','Residential','Services_Other']].sum()
+share = totals / totals.sum() * 100
+fig = px.bar(..., barmode='stack')</code></pre>
+<h3>Chart specification</h3><p>100% stacked bar, two bars (1990, 2022), stacked by sector. Caption discloses the 21 (1990) / 15 (2022) areas missing an industry row.</p>
+</section>
+<section id="o5">
+<h2>Output 5 — Country share change</h2>
+<h3>Input</h3><p>analysis_country_year.csv, fixed sample, years 1990 and 2022.</p>
+<h3>Transformation</h3><p>For each fixed-sample country compute share = FEC / world FEC in each year, then draw a line from the 1990 share to the 2022 share.</p>
+<h3>Code</h3><pre><code>share = d.FEC / d.groupby('year').FEC.transform('sum') * 100
+fig = go.Figure(); ...  # slope lines per country</code></pre>
+<h3>Chart specification</h3><p>Slope chart, x in {1990, 2022}, y = share (%), one line per country, same fixed sample as denominator in both years.</p>
+</section>
+<section id="o6">
+<h2>Output 6 — World map, 1990</h2>
+<h3>Input</h3><p>analysis_country_year.csv (year == 1990) + Natural Earth ne_50m geojson.</p>
+<h3>Transformation</h3><p>Resolve combined codes (251→250, 382→380, 579→578, 757→756) to the main country, take log10(FEC), and colour by the UN_A3 link.</p>
+<h3>Code</h3><pre><code>d['map_code'] = d.code.map({'251':'250','382':'380','579':'578','757':'756'}).fillna(d.code)
+fig = px.choropleth(d, geojson=geojson, locations='map_code',
+                    featureidkey='properties.UN_A3', color='FEC_log',
+                    color_continuous_scale='Viridis', range_color=[-1, 4])</code></pre>
+<h3>Chart specification</h3><p>Choropleth (Natural Earth 50m, UN_A3 link, 214/218 areas coloured). Uses the Viridis scale with range_color=[-1, 4] (log10 TWh).</p>
+</section>
+<section id="o7">
+<h2>Output 7 — World map, 2022</h2>
+<h3>Input</h3><p>analysis_country_year.csv (year == 2022) + Natural Earth ne_50m geojson.</p>
+<h3>Transformation</h3><p>Identical to Output 6 but for 2022, so both years share the same colour scale and range_color for a fair visual comparison. A separate animation_frame slider (output_6_7_slider.html) plays 1990-2022.</p>
+<h3>Code</h3><pre><code>fig = make_map_figure(2022, df)  # same scale and range_color as 1990</code></pre>
+<h3>Chart specification</h3><p>Choropleth (Natural Earth 50m, UN_A3 link). Shares the Viridis scale and range_color=[-1, 4] with Output 6.</p>
+</section>
+<section id="o8">
+<h2>Output 8 — Generation mix</h2>
+<h3>Input</h3><p>OWID electricity-prod-source-stacked.csv, Entity == 'World'.</p>
+<h3>Transformation</h3><p>Sum the nine source columns for 2000 and 2022, normalise to 100%, stack by source.</p>
+<h3>Code</h3><pre><code>w = world[world.Year == yr][srcs].sum()
+fig = px.bar(..., barmode='stack')</code></pre>
+<h3>Chart specification</h3><p>100% stacked bar, 2000 vs 2022, stacked by generation source. Caption states this is generation, not consumption, shown only as background.</p>
+</section>
+<section id="validation">
+<h2>Validation trace</h2>
+<ul>
+<li>Sector sum == FEC within 1%: 6932/6932 rows (100%).</li>
+<li>OWID 2022 ratio (UN FEC / OWID demand): China 0.928, Germany 0.884, Japan 0.867, Korea 0.870, Indonesia 0.880 (all in the 0.85-0.95 band); India 0.778 is flagged (high losses / incomplete agriculture reporting).</li>
+<li>Duplicate count: codes 250/380/578/756 are absent; 840 (US) and 076 (Brazil) present.</li>
+<li>Top-30 countries account for 88.6% of 2022 world FEC.</li>
+<li>If any of these changed materially, the chart captions and the limitations section of DATA_PIPELINE.md would have to be revisited.</li>
+</ul>
+</section>
+<section id="reproduce">
+<h2>Reproduce</h2>
+<pre>python team03/download_undata.py
+python team03/build_energy_dataset.py
+python team03/build_mappings.py
+python team03/build_analysis_tables.py
+python team03/validate_dataset.py
+python team03/make_figures.py
+python team03/make_dashboard.py</pre>
+<p>Expected outputs are described in <a href="../team03/DATA_PIPELINE.md">team03/DATA_PIPELINE.md</a>.</p>
+</section>
+<p><a href="index.html">Back to outputs</a></p>
+</body>
+</html>

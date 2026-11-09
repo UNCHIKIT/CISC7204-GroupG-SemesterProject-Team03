@@ -1,0 +1,202 @@
+country,year,un_fec_twh,owid_demand_twh,ratio,status,reason
+Afghanistan,2022,4.87,6.84,0.712,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Albania,2022,6.59,7.89,0.835,flag,Ratio outside the expected 0.85-0.95 band.
+Algeria,2022,67.52,88.9,0.759,flag,Ratio outside the expected 0.85-0.95 band.
+American Samoa,2022,0.16,0.18,0.891,ok,
+Angola,2022,13.82,17.31,0.798,flag,Ratio outside the expected 0.85-0.95 band.
+Antigua and Barbuda,2022,0.31,0.36,0.868,ok,
+Azerbaijan,2022,20.26,26.08,0.777,flag,Ratio outside the expected 0.85-0.95 band.
+Argentina,2022,124.41,158.49,0.785,flag,Ratio outside the expected 0.85-0.95 band.
+Australia,2022,220.84,272.92,0.809,flag,Ratio outside the expected 0.85-0.95 band.
+Austria,2022,63.69,73.17,0.87,ok,
+Bahamas,2022,1.97,2.05,0.961,flag,Ratio outside the expected 0.85-0.95 band.
+Bahrain,2022,34.44,35.71,0.965,flag,Ratio outside the expected 0.85-0.95 band.
+Bangladesh,2022,93.34,109.96,0.849,flag,Ratio outside the expected 0.85-0.95 band.
+Armenia,2022,6.73,8.43,0.798,flag,Ratio outside the expected 0.85-0.95 band.
+Barbados,2022,0.94,1.09,0.862,ok,
+Belgium,2022,76.21,86.8,0.878,ok,
+Bermuda,2022,0.52,0.63,0.832,flag,Ratio outside the expected 0.85-0.95 band.
+Bhutan,2022,2.47,11.6,0.213,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Bolivia (Plurinational State of),2022,9.51,11.67,0.815,flag,Ratio outside the expected 0.85-0.95 band.
+Bosnia and Herzegovina,2022,10.62,16.35,0.649,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Botswana,2022,3.95,4.36,0.905,ok,
+Brazil,2022,550.94,690.07,0.798,flag,Ratio outside the expected 0.85-0.95 band.
+Belize,2022,0.62,0.75,0.829,flag,Ratio outside the expected 0.85-0.95 band.
+Solomon Islands,2022,0.1,0.11,0.896,ok,
+British Virgin Islands,2022,0.18,0.17,1.034,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Brunei Darussalam,2022,4.55,5.6,0.813,flag,Ratio outside the expected 0.85-0.95 band.
+Bulgaria,2022,30.72,38.09,0.806,flag,Ratio outside the expected 0.85-0.95 band.
+Myanmar,2022,17.12,23.05,0.743,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Burundi,2022,0.33,0.49,0.676,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Belarus,2022,31.19,36.48,0.855,ok,
+Cambodia,2022,13.42,14.9,0.901,ok,
+Cameroon,2022,5.99,8.15,0.735,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Canada,2022,533.05,612.97,0.87,ok,
+Cabo Verde,2022,0.42,0.5,0.833,flag,Ratio outside the expected 0.85-0.95 band.
+Cayman Islands,2022,0.69,0.7,0.987,flag,Ratio outside the expected 0.85-0.95 band.
+Central African Republic,2022,0.11,0.14,0.781,flag,Ratio outside the expected 0.85-0.95 band.
+Sri Lanka,2022,14.67,16.75,0.876,ok,
+Chad,2022,0.26,0.39,0.672,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Chile,2022,79.36,91.04,0.872,ok,
+China,2022,8199.57,8835.76,0.928,ok,
+Colombia,2022,70.2,83.29,0.843,flag,Ratio outside the expected 0.85-0.95 band.
+Comoros,2022,0.1,0.14,0.736,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Congo,2022,1.78,4.95,0.359,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Democratic Republic of the Congo,2022,12.94,16.64,0.778,flag,Ratio outside the expected 0.85-0.95 band.
+Cook Islands,2022,0.04,0.04,0.891,ok,
+Costa Rica,2022,10.43,11.72,0.89,ok,
+Croatia,2022,16.24,18.79,0.865,ok,
+Cuba,2022,13.23,15.65,0.845,flag,Ratio outside the expected 0.85-0.95 band.
+Cyprus,2022,4.86,5.26,0.924,ok,
+Czechia,2022,57.97,70.2,0.826,flag,Ratio outside the expected 0.85-0.95 band.
+Benin,2022,1.48,1.82,0.813,flag,Ratio outside the expected 0.85-0.95 band.
+Denmark,2022,30.81,36.52,0.844,flag,Ratio outside the expected 0.85-0.95 band.
+Dominica,2022,0.13,0.15,0.895,ok,
+Dominican Republic,2022,20.35,22.17,0.918,ok,
+Ecuador,2022,27.8,33.33,0.834,flag,Ratio outside the expected 0.85-0.95 band.
+El Salvador,2022,7.16,7.25,0.988,flag,Ratio outside the expected 0.85-0.95 band.
+Equatorial Guinea,2022,0.94,1.51,0.625,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Ethiopia,2022,11.21,15.66,0.716,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Eritrea,2022,0.39,0.44,0.875,ok,
+Estonia,2022,7.14,9.95,0.718,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Faroe Islands,2022,0.4,0.48,0.824,flag,Ratio outside the expected 0.85-0.95 band.
+Falkland Islands (Malvinas),2022,0.02,0.01,1.802,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Fiji,2022,0.96,1.07,0.898,ok,
+Finland,2022,76.87,84.69,0.908,ok,
+French Polynesia,2022,0.64,0.71,0.906,ok,
+Djibouti,2022,0.68,0.71,0.955,flag,Ratio outside the expected 0.85-0.95 band.
+Gabon,2022,2.4,3.73,0.643,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Georgia,2022,13.39,14.81,0.904,ok,
+Gambia,2022,0.38,0.51,0.754,flag,Ratio outside the expected 0.85-0.95 band.
+State of Palestine,2022,7.24,7.72,0.938,ok,
+Germany,2022,477.2,539.62,0.884,ok,
+Ghana,2022,17.52,21.05,0.832,flag,Ratio outside the expected 0.85-0.95 band.
+Kiribati,2022,0.03,0.04,0.795,flag,Ratio outside the expected 0.85-0.95 band.
+Greece,2022,48.13,55.12,0.873,ok,
+Greenland,2022,0.4,0.54,0.736,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Grenada,2022,0.23,0.24,0.961,flag,Ratio outside the expected 0.85-0.95 band.
+Guatemala,2022,11.25,13.86,0.812,flag,Ratio outside the expected 0.85-0.95 band.
+Guinea,2022,2.76,4.0,0.689,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Guyana,2022,0.97,1.28,0.757,flag,Ratio outside the expected 0.85-0.95 band.
+Haiti,2022,0.87,1.01,0.864,ok,
+Honduras,2022,7.61,11.52,0.66,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+"China, Hong Kong Special Administrative Region",2022,44.86,48.45,0.926,ok,
+Hungary,2022,41.31,47.93,0.862,ok,
+Iceland,2022,18.87,19.87,0.95,ok,
+India,2022,1403.4,1802.88,0.778,flag,Ratio below the 0.85-0.95 band: high transmission and distribution losses and/or incomplete reporting of agriculture/other electricity in the UN final-consumption classification.
+Indonesia,2022,294.16,334.34,0.88,ok,
+Iran (Islamic Republic of),2022,315.98,360.61,0.876,ok,
+Iraq,2022,57.45,137.39,0.418,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Ireland,2022,30.32,34.04,0.891,ok,
+Israel,2022,63.6,69.95,0.909,ok,
+Italy-San Marino,2022,286.99,323.16,0.888,ok,
+Côte d’Ivoire,2022,9.92,11.85,0.837,flag,Ratio outside the expected 0.85-0.95 band.
+Jamaica,2022,3.51,4.49,0.781,flag,Ratio outside the expected 0.85-0.95 band.
+Japan,2022,902.02,1040.57,0.867,ok,
+Kazakhstan,2022,83.16,114.89,0.724,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Jordan,2022,20.58,22.64,0.909,ok,
+Kenya,2022,10.01,13.26,0.755,flag,Ratio outside the expected 0.85-0.95 band.
+Democratic People's Republic of Korea,2022,19.34,26.55,0.728,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Republic of Korea,2022,541.73,622.59,0.87,ok,
+Kuwait,2022,61.53,85.29,0.721,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Kyrgyzstan,2022,13.13,16.17,0.812,flag,Ratio outside the expected 0.85-0.95 band.
+Lao People's Democratic Republic,2022,11.07,11.95,0.926,ok,
+Lebanon,2022,2.88,4.37,0.658,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Lesotho,2022,0.85,0.91,0.939,ok,
+Latvia,2022,6.51,7.34,0.887,ok,
+Liberia,2022,0.29,0.39,0.754,flag,Ratio outside the expected 0.85-0.95 band.
+Libya,2022,27.85,35.83,0.777,flag,Ratio outside the expected 0.85-0.95 band.
+Lithuania,2022,10.66,12.61,0.846,flag,Ratio outside the expected 0.85-0.95 band.
+Luxembourg,2022,6.16,6.72,0.916,ok,
+"China, Macao Special Administrative Region",2022,5.25,5.36,0.98,flag,Ratio outside the expected 0.85-0.95 band.
+Madagascar,2022,2.11,2.64,0.798,flag,Ratio outside the expected 0.85-0.95 band.
+Malawi,2022,1.72,1.81,0.948,ok,
+Malaysia,2022,168.37,182.25,0.924,ok,
+Maldives,2022,1.12,0.85,1.319,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Mali,2022,3.98,4.61,0.863,ok,
+Malta,2022,2.69,2.94,0.916,ok,
+Mauritania,2022,1.68,2.02,0.833,flag,Ratio outside the expected 0.85-0.95 band.
+Mauritius,2022,2.89,3.12,0.925,ok,
+Mexico,2022,300.0,339.88,0.883,ok,
+Mongolia,2022,8.1,9.83,0.824,flag,Ratio outside the expected 0.85-0.95 band.
+Republic of Moldova,2022,4.04,6.17,0.655,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Montenegro,2022,2.6,3.18,0.819,flag,Ratio outside the expected 0.85-0.95 band.
+Montserrat,2022,0.01,0.01,1.104,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Morocco,2022,36.02,42.81,0.841,flag,Ratio outside the expected 0.85-0.95 band.
+Mozambique,2022,13.0,16.37,0.794,flag,Ratio outside the expected 0.85-0.95 band.
+Oman,2022,39.41,42.4,0.93,ok,
+Namibia,2022,3.23,4.07,0.795,flag,Ratio outside the expected 0.85-0.95 band.
+Nauru,2022,0.04,0.04,0.897,ok,
+Nepal,2022,9.1,11.19,0.813,flag,Ratio outside the expected 0.85-0.95 band.
+Netherlands,2022,103.73,115.69,0.897,ok,
+Aruba,2022,0.79,1.0,0.793,flag,Ratio outside the expected 0.85-0.95 band.
+New Caledonia,2022,3.09,3.09,1.001,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Vanuatu,2022,0.08,0.08,1.006,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+New Zealand,2022,38.56,43.25,0.892,ok,
+Nicaragua,2022,4.0,5.38,0.743,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Niger,2022,1.4,1.95,0.716,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Nigeria,2022,33.14,35.57,0.932,ok,
+Pakistan,2022,110.3,176.43,0.625,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Panama,2022,12.65,11.93,1.061,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Papua New Guinea,2022,4.51,4.59,0.982,flag,Ratio outside the expected 0.85-0.95 band.
+Paraguay,2022,14.66,20.16,0.727,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Peru,2022,52.16,59.94,0.87,ok,
+Philippines,2022,91.33,111.55,0.819,flag,Ratio outside the expected 0.85-0.95 band.
+Poland,2022,139.86,176.92,0.791,flag,Ratio outside the expected 0.85-0.95 band.
+Portugal,2022,48.66,55.58,0.876,ok,
+Guinea-Bissau,2022,0.17,0.08,2.172,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Timor-Leste,2022,0.39,0.51,0.765,flag,Ratio outside the expected 0.85-0.95 band.
+Qatar,2022,48.2,54.75,0.88,ok,
+Romania,2022,42.73,55.96,0.764,flag,Ratio outside the expected 0.85-0.95 band.
+Russian Federation,2022,822.82,1150.54,0.715,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Rwanda,2022,0.93,1.06,0.873,ok,
+Saint Helena,2022,0.01,0.01,0.8,flag,Ratio outside the expected 0.85-0.95 band.
+Saint Kitts and Nevis,2022,0.2,0.22,0.9,ok,
+Saint Lucia,2022,0.37,0.4,0.934,ok,
+Saint Pierre and Miquelon,2022,0.05,0.05,0.951,flag,Ratio outside the expected 0.85-0.95 band.
+Saint Vincent and the Grenadines,2022,0.14,0.15,0.917,ok,
+Sao Tome and Principe,2022,0.08,0.09,0.863,ok,
+Saudi Arabia,2022,309.52,409.8,0.755,flag,Ratio outside the expected 0.85-0.95 band.
+Senegal,2022,6.79,7.65,0.887,ok,
+Serbia,2022,28.98,37.59,0.771,flag,Ratio outside the expected 0.85-0.95 band.
+Seychelles,2022,0.5,0.62,0.801,flag,Ratio outside the expected 0.85-0.95 band.
+Sierra Leone,2022,0.34,0.2,1.71,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Singapore,2022,54.88,57.1,0.961,flag,Ratio outside the expected 0.85-0.95 band.
+Slovakia,2022,22.87,27.95,0.818,flag,Ratio outside the expected 0.85-0.95 band.
+Viet Nam,2022,255.85,267.43,0.957,flag,Ratio outside the expected 0.85-0.95 band.
+Slovenia,2022,13.04,14.81,0.881,ok,
+Somalia,2022,0.5,0.42,1.198,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+South Africa,2022,186.26,237.66,0.784,flag,Ratio outside the expected 0.85-0.95 band.
+Zimbabwe,2022,9.22,10.85,0.85,flag,Ratio outside the expected 0.85-0.95 band.
+Spain,2022,224.37,267.35,0.839,flag,Ratio outside the expected 0.85-0.95 band.
+South Sudan,2022,0.51,0.51,1.008,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Sudan,2022,13.26,17.66,0.751,flag,Ratio outside the expected 0.85-0.95 band.
+Suriname,2022,1.8,2.11,0.853,ok,
+Eswatini,2022,1.36,1.47,0.926,ok,
+Sweden,2022,122.27,139.83,0.874,ok,
+Switzerland-Liechtenstein,2022,57.03,64.86,0.879,ok,
+Syrian Arab Republic,2022,19.48,19.72,0.988,flag,Ratio outside the expected 0.85-0.95 band.
+Tajikistan,2022,14.6,18.94,0.771,flag,Ratio outside the expected 0.85-0.95 band.
+Thailand,2022,208.2,213.78,0.974,flag,Ratio outside the expected 0.85-0.95 band.
+Togo,2022,1.73,2.03,0.851,ok,
+Tonga,2022,0.07,0.08,0.869,ok,
+Trinidad and Tobago,2022,8.66,9.5,0.911,ok,
+United Arab Emirates,2022,134.61,155.31,0.867,ok,
+Tunisia,2022,18.48,23.98,0.771,flag,Ratio outside the expected 0.85-0.95 band.
+Turkey,2022,282.28,323.29,0.873,ok,
+Turkmenistan,2022,15.23,23.6,0.645,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Turks and Caicos Islands,2022,0.28,0.26,1.063,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Uganda,2022,3.95,5.34,0.739,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Ukraine,2022,80.49,111.61,0.721,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+The former Yugoslav Republic of Macedonia,2022,5.89,7.35,0.801,flag,Ratio outside the expected 0.85-0.95 band.
+Egypt,2022,172.35,215.15,0.801,flag,Ratio outside the expected 0.85-0.95 band.
+United Kingdom of Great Britain and Northern Ireland,2022,272.41,320.28,0.851,ok,
+United Republic of Tanzania,2022,7.65,9.77,0.783,flag,Ratio outside the expected 0.85-0.95 band.
+United States of America,2022,4006.21,4328.1,0.926,ok,
+Burkina Faso,2022,2.69,3.18,0.847,flag,Ratio outside the expected 0.85-0.95 band.
+Uruguay,2022,11.75,13.5,0.87,ok,
+Uzbekistan,2022,56.58,77.4,0.731,flag,Ratio < 0.75: UN final consumption is far below generation-side demand.
+Venezuela (Bolivarian Republic of),2022,67.99,82.36,0.825,flag,Ratio outside the expected 0.85-0.95 band.
+Samoa,2022,0.15,0.16,0.96,flag,Ratio outside the expected 0.85-0.95 band.
+Yemen,2022,3.13,3.03,1.033,flag,Ratio > 1.00: UN final consumption exceeds generation-side demand.
+Zambia,2022,13.78,16.43,0.839,flag,Ratio outside the expected 0.85-0.95 band.
