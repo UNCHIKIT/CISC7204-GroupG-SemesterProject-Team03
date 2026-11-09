@@ -137,6 +137,7 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
         6: map90,
         7: map22,
         8: mix,
+        9: df[["code", "area", "year", "FEC"]].rename(columns={"FEC": "fec_twh"}),
     }
 
 
@@ -161,6 +162,8 @@ def _captions() -> dict[int, str]:
            "214 of 218 areas have a matching polygon).",
         8: "World electricity generation mix, 2000 vs 2022. This is generation, not "
            "final consumption, and is shown only as background context.",
+        9: "Animated world map, 1990-2022. Use the slider or the play button to scrub "
+           "through every year.",
     }
 
 
@@ -174,6 +177,7 @@ def _figures(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, object]:
         6: mf.make_map_figure(1990, df),
         7: mf.make_map_figure(2022, df),
         8: mf.fig_generation_mix(),
+        9: mf.fig_map_slider(df),
     }
 
 
@@ -186,6 +190,7 @@ _PNG_NAMES = {
     6: "output_6_map_1990.png",
     7: "output_7_map_2022.png",
     8: "output_8_generation_mix.png",
+    9: "output_9_map_slider.png",
 }
 
 _TITLES = {
@@ -197,6 +202,7 @@ _TITLES = {
     6: "Output 6 — World map, 1990",
     7: "Output 7 — World map, 2022",
     8: "Output 8 — Generation mix (background)",
+    9: "Output 6-7 — Animated world map (1990-2022)",
 }
 
 
@@ -204,6 +210,11 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
     figs = _figures(df, reg)
     csvs = _fig_csvs(df, reg)
     captions = _captions()
+
+    # Render a static thumbnail of the animated slider for its PNG download button.
+    slider_png = FIGURES / "output_9_map_slider.png"
+    if not slider_png.exists():
+        figs[9].write_image(slider_png, **mf.PNG_SIZE)
 
     world22 = df[df["year"] == 2022]["FEC"].sum()
     n_areas = df["code"].nunique()
@@ -232,7 +243,7 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
     parts.append("</section>\n")
 
     parts.append("<section id=\"outputs\">\n<h2>The eight outputs</h2>\n")
-    for n in range(1, 9):
+    for n in range(1, 10):
         png_uri = _png_to_uri(_PNG_NAMES[n])
         csv_uri = _csv_to_uri(csvs[n])
         if n == 1:
@@ -241,6 +252,7 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
         else:
             fig_html = figs[n].to_html(include_plotlyjs=False, full_html=False, div_id=f"chart{n}")
         parts.append('<div class="chart">\n')
+        parts.append(f"<h3>{_TITLES[n]}</h3>\n")
         parts.append(fig_html)
         parts.append(f"<p class=\"caption\">{captions[n]}</p>\n")
         parts.append('<div class="buttons">\n')
