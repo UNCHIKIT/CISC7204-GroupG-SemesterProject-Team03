@@ -10,4 +10,6 @@ Datasets/*.pdf
 
 # External validation caches (re-downloadable)
 Datasets/owid_*.csv
+Datasets/carbon_intensity_electricity.csv
 Datasets/worldbank_population.json
+Datasets/worldbank_gdp_ppp.json
