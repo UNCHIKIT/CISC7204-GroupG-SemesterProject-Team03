@@ -452,6 +452,106 @@ def fig_generation_vs_consumption(df: pd.DataFrame) -> go.Figure:
     return fig
 
 
+# --------------------------------------------------------------------------- #
+# Output 16: consumption vs population vs GDP growth (B.5 simpler comparison)
+# --------------------------------------------------------------------------- #
+def fig_consumption_comparison(df: pd.DataFrame) -> go.Figure:
+    pop = _wb_series(POP_JSON)
+    gdp = _wb_series(GDP_JSON)
+    rows = []
+    for label, code, iso3 in DRIVER_COUNTRIES:
+        e = df[(df["code"] == code) & (df["year"].isin([2000, 2022]))].set_index("year")["FEC"]
+        p00, p22 = pop.get((iso3, 2000)), pop.get((iso3, 2022))
+        g00, g22 = gdp.get((iso3, 2000)), gdp.get((iso3, 2022))
+        if None in (p00, p22, g00, g22) or 2000 not in e.index or 2022 not in e.index:
+            continue
+        rows.append({"country": label,
+                     "Electricity (E)": np.log(e[2022] / e[2000]) * 100,
+                     "Population": np.log(p22 / p00) * 100,
+                     "GDP": np.log(g22 / g00) * 100})
+    d = pd.DataFrame(rows).melt(id_vars="country", var_name="metric", value_name="growth_pp")
+    order = (d[d["metric"] == "Electricity (E)"].set_index("country")["growth_pp"]
+             .sort_values().index.tolist())
+
+    fig = px.bar(d, x="growth_pp", y="country", color="metric", barmode="group",
+                 orientation="h", category_orders={"country": order},
+                 title="Consumption growth vs population and GDP growth, 2000→2022",
+                 labels={"growth_pp": "Log growth, percentage points", "country": ""},
+                 color_discrete_map={"Electricity (E)": "#1a1a2e", "Population": "#66c2a5",
+                                     "GDP": "#fc8d62"})
+    fig.update_layout(template="plotly_white")
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 17: per-capita electricity vs per-capita GDP, 2022 (B.2)
+# --------------------------------------------------------------------------- #
+ISO3_FALLBACK = {"251": "FRA", "579": "NOR"}
+
+
+def _country_iso3() -> dict[str, str]:
+    cr = pd.read_csv(DATASETS / "country_region.csv", dtype={"code": str})
+    m = cr.set_index("code")["iso3"].to_dict()
+    m.update(ISO3_FALLBACK)
+    return m
+
+
+def fig_percapita_scatter(df: pd.DataFrame) -> go.Figure:
+    pop = _wb_series(POP_JSON)
+    gdp = _wb_series(GDP_JSON)
+    iso3 = _country_iso3()
+
+    rows = []
+    for _, r in df[df["year"] == 2022].iterrows():
+        iso = iso3.get(r["code"])
+        if not iso:
+            continue
+        p = pop.get((iso, 2022))
+        g = gdp.get((iso, 2022))
+        if not p or not g:
+            continue
+        rows.append({"country": r["area"], "region": r["region"],
+                     "electricity_per_capita_kwh": r["FEC"] * 1e9 / p,
+                     "gdp_per_capita_usd": g / p})
+    d = pd.DataFrame(rows)
+
+    fig = px.scatter(d, x="gdp_per_capita_usd", y="electricity_per_capita_kwh",
+                     color="region", hover_name="country", log_x=True, log_y=True,
+                     title="Electricity use vs income per person, 2022 (association, not causation)",
+                     labels={"gdp_per_capita_usd": "GDP per person (2011 intl $, log)",
+                             "electricity_per_capita_kwh": "Electricity per person (kWh, log)",
+                             "region": "Region"})
+    fig.update_layout(template="plotly_white")
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 18: Kaya decomposition waterfall, China (B.3 method illustration)
+# --------------------------------------------------------------------------- #
+def fig_kaya_waterfall(df: pd.DataFrame) -> go.Figure:
+    tab = drivers_decomposition_data(df)
+    china = tab[tab["country"] == "China"].iloc[0]
+    fig = go.Figure(go.Waterfall(
+        x=["Population", "Income per person", "Efficiency (E/GDP)", "Total E growth"],
+        measure=["relative", "relative", "relative", "total"],
+        y=[china["population_pp"], china["income_per_person_pp"],
+           china["e_gdp_pp"], china["total_growth_pp"]],
+        connector=dict(line=dict(color="#c8c8d0")),
+        increasing=dict(marker=dict(color="#66c2a5")),
+        decreasing=dict(marker=dict(color="#fc8d62")),
+        totals=dict(marker=dict(color="#1a1a2e")),
+        text=[f"{v:+.1f}" for v in (china["population_pp"], china["income_per_person_pp"],
+                                    china["e_gdp_pp"], china["total_growth_pp"])],
+        textposition="outside",
+    ))
+    fig.update_layout(
+        title="Kaya decomposition, China 2000→2022 (E = population × income/person × E/GDP)",
+        yaxis_title="Log growth, percentage points",
+        template="plotly_white",
+    )
+    return fig
+
+
 def main() -> int:
     df = load_country_year()
     reg = load_region_year()
@@ -471,6 +571,9 @@ def main() -> int:
         "output_13_generation_mix_countries.png": fig_generation_mix_countries(),
         "output_14_carbon_intensity.png": fig_carbon_intensity(),
         "output_15_generation_vs_consumption.png": fig_generation_vs_consumption(df),
+        "output_16_consumption_comparison.png": fig_consumption_comparison(df),
+        "output_17_percapita_scatter.png": fig_percapita_scatter(df),
+        "output_18_kaya_waterfall.png": fig_kaya_waterfall(df),
     }
 
     FIGURES.mkdir(parents=True, exist_ok=True)

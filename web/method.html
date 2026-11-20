@@ -40,7 +40,7 @@ ul { padding-left:22px; }
 </head>
 <body>
 <nav><a href="index.html">Outputs</a><a href="#overview">Method</a><a href="index.html#data-dictionary">Data dictionary</a><a href="index.html#files">Files</a></nav>
-<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to fifteen outputs</p></header>
+<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to eighteen outputs</p></header>
 <section id="overview">
 <h2>Overview</h2>
 <pre>un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)
@@ -50,7 +50,7 @@ ne_50m geojson ──────────┴─► country_region.csv ─►
                                                           │
                                               analysis_region_year.csv
                                                           │
-                                   fifteen figures + this dashboard</pre>
+                                   eighteen figures + this dashboard</pre>
 <p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, <code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, <code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, <code>analysis_region_year.csv</code>.</p>
 </section>
 <section id="shared">
@@ -183,6 +183,33 @@ fig = px.line(d, x='Year', y='Carbon intensity', color='Entity')</code></pre>
 cons = df[df.year == 2022]['FEC'].sum()
 gap = gen - cons  # ~14% = losses + own-use + trade</code></pre>
 <h3>Chart specification</h3><p>Two bars (generation, consumption) with a caption noting the ~14% gap is why generation stays out of the sector shares.</p>
+</section>
+<section id="o16">
+<h2>Consumption vs population and GDP growth</h2>
+<h3>Input</h3><p>analysis_country_year.csv (FEC), World Bank SP.POP.TOTL and NY.GDP.MKTP.PP.KD.</p>
+<h3>Transformation</h3><p>For each of eleven countries compute log growth of FEC, population and total GDP over 2000-2022, and plot as grouped bars.</p>
+<h3>Code</h3><pre><code>ge = log(E22/E00)*100; gp = log(P22/P00)*100; gg = log(GDP22/GDP00)*100
+fig = px.bar(d, x='growth_pp', y='country', color='metric', barmode='group')</code></pre>
+<h3>Chart specification</h3><p>Grouped horizontal bar, one group per country (E, population, GDP).</p>
+</section>
+<section id="o17">
+<h2>Electricity use vs income per person</h2>
+<h3>Input</h3><p>analysis_country_year.csv FEC, World Bank population and GDP PPP, 2022.</p>
+<h3>Transformation</h3><p>For every country with both population and GDP, compute per-capita electricity (kWh) and per-capita GDP, then plot on log-log axes coloured by region.</p>
+<h3>Code</h3><pre><code>e_pc = FEC*1e9/P; g_pc = GDP/P
+fig = px.scatter(d, x='gdp_per_capita_usd', y='electricity_per_capita_kwh',
+                 color='region', log_x=True, log_y=True)</code></pre>
+<h3>Chart specification</h3><p>Log-log scatter, one point per country, coloured by continent; caption states association, not causation.</p>
+</section>
+<section id="o18">
+<h2>Kaya decomposition, China</h2>
+<h3>Input</h3><p>analysis_country_year.csv FEC, World Bank population and GDP PPP, China.</p>
+<h3>Transformation</h3><p>Compute China's population / income-per-person / E-per-GDP log-growth components and draw them as a waterfall summing to total growth.</p>
+<h3>Code</h3><pre><code>fig = go.Figure(go.Waterfall(
+    x=['Population','Income per person','Efficiency (E/GDP)','Total E growth'],
+    measure=['relative','relative','relative','total'],
+    y=[gp, gy, gi, ge]))</code></pre>
+<h3>Chart specification</h3><p>Waterfall showing the three additive parts and their total.</p>
 </section>
 <section id="validation">
 <h2>Validation trace</h2>

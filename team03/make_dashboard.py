@@ -16,6 +16,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -177,6 +178,42 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
     gen_cons = pd.DataFrame({"quantity": ["Generation", "Final consumption"],
                              "twh": [round(gen, 1), round(cons, 1)]})
 
+    # 16: consumption vs population vs GDP growth
+    pop = mf._wb_series(mf.POP_JSON)
+    gdp = mf._wb_series(mf.GDP_JSON)
+    comp_rows = []
+    for label, code, iso3 in mf.DRIVER_COUNTRIES:
+        e = df[(df["code"] == code) & (df["year"].isin([2000, 2022]))].set_index("year")["FEC"]
+        p00, p22 = pop.get((iso3, 2000)), pop.get((iso3, 2022))
+        g00, g22 = gdp.get((iso3, 2000)), gdp.get((iso3, 2022))
+        if None in (p00, p22, g00, g22) or 2000 not in e.index or 2022 not in e.index:
+            continue
+        comp_rows.append({"country": label,
+                          "electricity_growth_pp": round(float(np.log(e[2022] / e[2000]) * 100), 1),
+                          "population_growth_pp": round(float(np.log(p22 / p00) * 100), 1),
+                          "gdp_growth_pp": round(float(np.log(g22 / g00) * 100), 1)})
+    comparison = pd.DataFrame(comp_rows)
+
+    # 17: per-capita scatter
+    iso3_map = mf._country_iso3()
+    pc_rows = []
+    for _, r in df[df["year"] == 2022].iterrows():
+        iso = iso3_map.get(r["code"])
+        if not iso:
+            continue
+        p = pop.get((iso, 2022))
+        g = gdp.get((iso, 2022))
+        if not p or not g:
+            continue
+        pc_rows.append({"country": r["area"], "region": r["region"],
+                        "electricity_per_capita_kwh": round(r["FEC"] * 1e9 / p, 1),
+                        "gdp_per_capita_usd": round(g / p, 1)})
+    percapita = pd.DataFrame(pc_rows)
+
+    # 18: China Kaya waterfall
+    waterfall = drivers[drivers["country"] == "China"][
+        ["country", "population_pp", "income_per_person_pp", "e_gdp_pp", "total_growth_pp"]]
+
     return {
         1: world.merge(fixed_s, on="year"),
         2: top10,
@@ -193,6 +230,9 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
         13: country_mix,
         14: carbon,
         15: gen_cons,
+        16: comparison,
+        17: percapita,
+        18: waterfall,
     }
 
 
@@ -235,6 +275,15 @@ def _captions() -> dict[int, str]:
         15: "World generation vs final consumption, 2022. The ~14% gap is "
             "transmission/distribution losses, plant own-use and net trade - the reason "
             "generation stays out of the sector shares.",
+        16: "Consumption growth vs population and GDP growth, 2000-2022. Where electricity "
+            "growth outpaces GDP, electrification is catching up; where it trails, "
+            "efficiency/decoupling. Associations only.",
+        17: "Electricity use vs income per person, 2022 (log-log). The upward slope shows "
+            "richer countries use more electricity per person - an association, not proof "
+            "that income causes consumption.",
+        18: "Kaya decomposition for China, 2000-2022, illustrating the method: "
+            "E = population x income/person x E/GDP. The three parts sum exactly to total "
+            "growth (associations, not causes).",
     }
 
 
@@ -255,6 +304,9 @@ def _figures(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, object]:
         13: mf.fig_generation_mix_countries(),
         14: mf.fig_carbon_intensity(),
         15: mf.fig_generation_vs_consumption(df),
+        16: mf.fig_consumption_comparison(df),
+        17: mf.fig_percapita_scatter(df),
+        18: mf.fig_kaya_waterfall(df),
     }
 
 
@@ -274,6 +326,9 @@ _PNG_NAMES = {
     13: "output_13_generation_mix_countries.png",
     14: "output_14_carbon_intensity.png",
     15: "output_15_generation_vs_consumption.png",
+    16: "output_16_consumption_comparison.png",
+    17: "output_17_percapita_scatter.png",
+    18: "output_18_kaya_waterfall.png",
 }
 
 _TITLES = {
@@ -292,6 +347,9 @@ _TITLES = {
     13: "Generation mix, largest countries (2022)",
     14: "Carbon intensity of electricity (2000-2022)",
     15: "Generation vs final consumption (2022)",
+    16: "Consumption vs population and GDP growth (2000-2022)",
+    17: "Electricity use vs income per person (2022)",
+    18: "Kaya decomposition, China (2000-2022)",
 }
 
 
@@ -332,7 +390,7 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
     parts.append("</section>\n")
 
     parts.append("<section id=\"outputs\">\n<h2>The outputs</h2>\n")
-    for n in range(1, 16):
+    for n in range(1, 19):
         png_uri = _png_to_uri(_PNG_NAMES[n])
         csv_uri = _csv_to_uri(csvs[n])
         if n in (6, 7):
@@ -554,6 +612,32 @@ def _method_sections() -> list[dict]:
                  "gap = gen - cons  # ~14% = losses + own-use + trade",
          "spec": "Two bars (generation, consumption) with a caption noting the ~14% gap is "
                  "why generation stays out of the sector shares."},
+        {"id": "o16", "title": "Consumption vs population and GDP growth",
+         "input": "analysis_country_year.csv (FEC), World Bank SP.POP.TOTL and NY.GDP.MKTP.PP.KD.",
+         "trans": "For each of eleven countries compute log growth of FEC, population and "
+                  "total GDP over 2000-2022, and plot as grouped bars.",
+         "code": "ge = log(E22/E00)*100; gp = log(P22/P00)*100; gg = log(GDP22/GDP00)*100\n"
+                 "fig = px.bar(d, x='growth_pp', y='country', color='metric', barmode='group')",
+         "spec": "Grouped horizontal bar, one group per country (E, population, GDP)."},
+        {"id": "o17", "title": "Electricity use vs income per person",
+         "input": "analysis_country_year.csv FEC, World Bank population and GDP PPP, 2022.",
+         "trans": "For every country with both population and GDP, compute per-capita "
+                  "electricity (kWh) and per-capita GDP, then plot on log-log axes coloured "
+                  "by region.",
+         "code": "e_pc = FEC*1e9/P; g_pc = GDP/P\n"
+                 "fig = px.scatter(d, x='gdp_per_capita_usd', y='electricity_per_capita_kwh',\n"
+                 "                 color='region', log_x=True, log_y=True)",
+         "spec": "Log-log scatter, one point per country, coloured by continent; caption "
+                 "states association, not causation."},
+        {"id": "o18", "title": "Kaya decomposition, China",
+         "input": "analysis_country_year.csv FEC, World Bank population and GDP PPP, China.",
+         "trans": "Compute China's population / income-per-person / E-per-GDP log-growth "
+                  "components and draw them as a waterfall summing to total growth.",
+         "code": "fig = go.Figure(go.Waterfall(\n"
+                 "    x=['Population','Income per person','Efficiency (E/GDP)','Total E growth'],\n"
+                 "    measure=['relative','relative','relative','total'],\n"
+                 "    y=[gp, gy, gi, ge]))",
+         "spec": "Waterfall showing the three additive parts and their total."},
     ]
 
 
@@ -566,7 +650,7 @@ def build_method_html() -> str:
                  '<a href="index.html#files">Files</a></nav>\n')
 
     parts.append("<header><h1>Method — how the data becomes the charts</h1>"
-                 "<p class=\"subtitle\">From raw UN SDMX XML to fifteen outputs</p></header>\n")
+                 "<p class=\"subtitle\">From raw UN SDMX XML to eighteen outputs</p></header>\n")
 
     parts.append("<section id=\"overview\">\n<h2>Overview</h2>\n<pre>"
                  "un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)\n"
@@ -576,7 +660,7 @@ def build_method_html() -> str:
                  "                                                          │\n"
                  "                                              analysis_region_year.csv\n"
                  "                                                          │\n"
-                 "                                   fifteen figures + this dashboard</pre>\n"
+                 "                                   eighteen figures + this dashboard</pre>\n"
                  "<p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, "
                  "<code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, "
                  "<code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, "
