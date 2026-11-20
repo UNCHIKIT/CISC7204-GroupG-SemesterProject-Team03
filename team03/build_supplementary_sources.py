@@ -120,10 +120,10 @@ REGISTER = [
      "Sites unreachable; Persian only",
      "-",
      ""),
-    ("Bangladesh", "Transport 1990-2021",
+    ("Bangladesh", "Transport 1990-2020",
      "Bangladesh Railway; Dhaka MRT Line-6",
      "Unresolved (documented)",
-     "Bangladesh Railway is diesel-hauled; first electric urban rail (Dhaka MRT Line-6) opened 28 Dec 2022, so transport is nil in practice but no numeric national source exists",
+     "Bangladesh Railway is diesel-hauled; first electric urban rail (Dhaka MRT Line-6) opened 28 Dec 2022, so 1990-2020 is nil in practice. UNdata itself reports 2021=0.465 and 2022=0.498 TWh (kept as-is; the 2021 value slightly precedes the documented metro opening - observation only)",
      "-",
      "https://www.bd.emb-japan.go.jp/itpr_en/11_000001_00654.html"),
 ]

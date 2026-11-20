@@ -26,9 +26,11 @@
 > * **Saudi Arabia — still unresolved** (no transport category anywhere; Riyadh Metro
 >   opened late 2024).
 > * **Iran — not accessible** (Persian only).
-> * **Bangladesh — assessed.** Real transport gap (31/33 years); Bangladesh Railway
->   is diesel-hauled and Dhaka MRT Line-6 opened only 28 Dec 2022, so transport is
->   nil in practice but is left missing (no numeric national source).
+> * **Bangladesh — assessed.** Real transport gap (1990–2020, 31 years); Bangladesh
+>   Railway is diesel-hauled and Dhaka MRT Line-6 opened only 28 Dec 2022, so 1990–2020
+>   is nil in practice and left missing. UNdata itself reports 2021=0.465 and
+>   2022=0.498 TWh (kept as-is; the 2021 value slightly precedes the metro opening —
+>   observation only).
 >
 > Data consistency re-verified after the fills: sector-sum == FEC still 100%
 > (`validate_dataset.py`).

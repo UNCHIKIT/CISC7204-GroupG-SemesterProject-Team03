@@ -293,9 +293,11 @@ counting. The script asserts the four codes are absent from
 * Malaysia transport 1990–1996 remains missing: NEB 2012 reports transport "–"
   (not collected) before 2006; KTM Komuter (Aug 1995) and STAR LRT (Dec 1996)
   imply small but unquantified values.
-* Bangladesh transport 1990–2021 is nil in practice (Bangladesh Railway is
-  diesel-hauled; the first electric urban rail, Dhaka MRT Line-6, opened
-  28 Dec 2022) but no numeric national source exists, so it is left missing.
+* Bangladesh transport 1990–2020 is missing (Bangladesh Railway is diesel-hauled;
+  the first electric urban rail, Dhaka MRT Line-6, opened 28 Dec 2022). UNdata
+  itself reports 2021=0.465 and 2022=0.498 TWh, which are kept as-is; the 2021
+  value slightly precedes the documented metro opening and is noted only as an
+  observation.
 * `ESTIMATE=Y` values are retained and the flag is preserved in the raw CSV.
 * The original IEA source files cannot be redistributed; only the UN-derived
   aggregates are committed.
