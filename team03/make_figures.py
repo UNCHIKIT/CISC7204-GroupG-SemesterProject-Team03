@@ -583,7 +583,7 @@ def main() -> int:
 
     # self-contained slider HTML
     slider = fig_map_slider(df)
-    html = slider.to_html(include_plotlyjs=True, full_html=True)
+    html = slider.to_html(include_plotlyjs=True, full_html=True, div_id="map-slider")
     (FIGURES / "output_6_7_slider.html").write_text(html, encoding="utf-8")
     print(f"[html] output_6_7_slider.html ({len(html)} bytes)")
 

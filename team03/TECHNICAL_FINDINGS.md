@@ -125,3 +125,49 @@ regenerate to the same numbers above.
   E = P × (GDP/P) × (E/GDP)) is arithmetic and observational; it describes *what*
   accounts for growth, never *why*. Any causal claim would need prices, policy,
   technology cost and weather data this project does not hold.
+
+---
+
+## 7. Review — pipeline, validation, reproducibility (what was checked)
+
+### Pipeline (9 scripts)
+
+Every script has a clear input→output contract, caching, and error handling:
+
+1. `download_undata.py` — cached; falls back to the existing cleaned CSV if the
+   SDMX service is unreachable.
+2. `build_energy_dataset.py` — streams the XML, keeps only `B07_EL` × the 7
+   transactions, **excludes `B47_123`**.
+3. `build_mappings.py` — CL_AREA name/ISO/parent, static subregion→continent walk-up,
+   combined-code resolution, Natural Earth `UN_A3` link.
+4. `build_analysis_tables.py` — pivot to TWh, applies the 4 flagged decisions.
+4.5 `build_supplementary_sources.py` — gap table + 12-country source register.
+4.6 `sensitivity_analysis.py` — decision counterfactuals + sector robustness.
+5. `validate_dataset.py` — the four validation layers.
+6. `make_figures.py` — 18 figures (PNG + interactive) + the map slider.
+7. `make_dashboard.py` — `web/index.html` + `web/method.html`.
+
+No dead code, no unreferenced outputs, no `TODO`s or stubs.
+
+### Validation results (re-run, confirmed)
+
+`validate_dataset.py` re-run confirms the documented numbers exactly: sector-sum == FEC
+**6,932/6,932 (100%)**; 218 areas; top-30 = **88.6%**; 36,247 observations; no
+double-count (250/380/578/756 absent, 840 and 076 present); OWID cross-check flags
+India (0.778) as documented.
+
+### Reproducibility (full re-run)
+
+The whole pipeline was re-run end-to-end and checked against the committed files:
+
+* **Data steps (1–4.6, 5): byte-identical** — `git status` stayed clean after re-running
+  all seven; the regenerated CSVs differ by zero bytes.
+* **Figures (18 PNGs) + dashboard (`web/index.html`, `web/method.html`): byte-identical.**
+* **One finding, now fixed:** `Figures/output_6_7_slider.html` was the only file that
+  did not reproduce byte-for-byte. The cause was Plotly's `to_html()` assigning a
+  **random container `div_id` (UUID)** on each run — the chart data was identical, only
+  three lines (the `<div id>` and its two references) differed. Fixed by pinning
+  `div_id="map-slider"`; verified that two serializations now produce equal bytes.
+
+**Conclusion:** the pipeline is deterministic and reproducible; the only
+non-determinism found was a cosmetic container ID, now eliminated.
