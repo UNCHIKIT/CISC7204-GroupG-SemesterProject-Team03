@@ -182,14 +182,16 @@ Choropleths: Viridis scale, `range_color=[-1, 4]` on `log10(FEC)`, keyed on `UN_
 
 ## 8. Files: committed vs ignored
 
-Committed (in git): `team03/` (8 `.py` + `DATA_PIPELINE.md` + this file),
-`web/index.html` (18.5 MB self-contained), `web/method.html`,
-`Figures/` (11 PNG + `output_6_7_slider.html`), and these 9 CSVs in `Datasets/`:
+Committed (in git): `team03/` (9 `.py` + 6 `.md`: `DATA_PIPELINE.md`, `HANDOFF.md`,
+`HANDOFF_REMAINING_WORK.md`, `ANSWERS_GENERATION_MIX_AND_DRIVERS.md`,
+`TECHNICAL_FINDINGS.md`, `SUPPLEMENTARY_SOURCES_RESOLUTION.md`),
+`web/index.html` (15.9 MB self-contained), `web/method.html`,
+`Figures/` (18 PNG + `output_6_7_slider.html`), and these 10 CSVs in `Datasets/`:
 
 `electricity_consumption_1990_2023.csv`, `country_region.csv`, `natural_earth_index.csv`,
 `analysis_country_year.csv`, `analysis_region_year.csv`, `validation_crosscheck.csv`,
 `validation_jumps.csv`, `undata_sector_gap_table_1990_2022.csv`,
-`supplementary_source_register.csv`.
+`supplementary_source_register.csv`, `sensitivity_analysis.csv`.
 
 Gitignored (raw / re-downloadable): `Datasets/*.xml`, `Datasets/*.geojson`,
 `Datasets/*.pdf`, `Datasets/owid_*.csv`, `Datasets/worldbank_population.json`.
@@ -263,7 +265,10 @@ Working tree clean. The only files not committed are the gitignored raw download
 - Sensitivity + robustness numbers (how much each data decision moves the headline
   figures) are in `team03/sensitivity_analysis.py` → `Datasets/sensitivity_analysis.csv`,
   and summarised for the report/PPT in `team03/TECHNICAL_FINDINGS.md`.
-- The three flag columns are part of the `analysis_country_year.csv` contract;
+- The full per-country source-verification resolution (source, evidence, decision,
+  solution method for all 13 gap countries) is in
+  `team03/SUPPLEMENTARY_SOURCES_RESOLUTION.md`.
+- The four flag columns are part of the `analysis_country_year.csv` contract;
   downstream (validation, figures, dashboard) assumes they exist.
 - `Services_Other` is a *computed* column (sum of 3 components), not a stored
   transaction. Never sum `B47_123`.

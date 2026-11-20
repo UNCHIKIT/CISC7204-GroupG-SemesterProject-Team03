@@ -304,6 +304,10 @@ counting. The script asserts the four codes are absent from
 * Four areas (Norway `579`, Gibraltar `292`, Kosovo `412`, Bonaire `535`) have
   no Natural Earth 50m polygon; Norway's `UN_A3` is absent from the geojson.
 
+The per-country supplementary-source verification (source, evidence, decision and
+solution method for every gap country) is documented in
+`SUPPLEMENTARY_SOURCES_RESOLUTION.md`.
+
 ---
 
 ## File manifest
