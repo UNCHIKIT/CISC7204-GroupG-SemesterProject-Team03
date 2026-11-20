@@ -313,6 +313,7 @@ counting. The script asserts the four codes are absent from
 | `build_mappings.py` | `UN_CL_AREA_codelist.xml`, geojson | `natural_earth_index.csv`, `country_region.csv` |
 | `build_analysis_tables.py` | cleaned CSV, `country_region.csv`, AGEB PDF | `analysis_country_year.csv`, `analysis_region_year.csv` |
 | `build_supplementary_sources.py` | cleaned CSV, `UN_CL_AREA_codelist.xml` | `undata_sector_gap_table_1990_2022.csv`, `supplementary_source_register.csv` |
+| `sensitivity_analysis.py` | `analysis_country_year.csv`, cleaned CSV | `sensitivity_analysis.csv` (decision counterfactuals + sector robustness) |
 | `validate_dataset.py` | analysis tables, OWID, World Bank | `validation_jumps.csv`, `validation_crosscheck.csv` |
 | `make_figures.py` | analysis tables, geojson, OWID | `Figures/output_*.png`, `output_6_7_slider.html` |
 | `make_dashboard.py` | figures, PNGs | `web/index.html`, `web/method.html` |
@@ -330,6 +331,7 @@ counting. The script asserts the four codes are absent from
 | `validation_jumps.csv` | 41 | `code, area, year, prev_year, prev_fec_twh, fec_twh, change_pct` |
 | `undata_sector_gap_table_1990_2022.csv` | 218 | `code, area, FEC_2022_TWh, Industry, Transport, Residential, Services/Other, share_%, cum_%, any_gap` |
 | `supplementary_source_register.csv` | 12 | `country, gap, source, decision, reason / caveat, licence, source_url` |
+| `sensitivity_analysis.csv` | 5 | `scenario, world_fec_1990, world_fec_2022, fixed_sample_countries, top30_share_2022_pct, industry_share_1990_pct` |
 
 ---
 

@@ -1,0 +1,6 @@
+scenario,world_fec_1990,world_fec_2022,fixed_sample_countries,top30_share_2022_pct,industry_share_1990_pct
+all decisions (base),8275.2,24936.3,179,88.6,44.92
+no Germany 1990,7811.8,24936.3,178,88.6,44.64
+no Pakistan 1990-92 industry fill,8264.9,24936.3,179,88.6,44.85
+no Pakistan transport 2017-22 (NaN),8275.2,24936.3,179,88.6,44.92
+no Indonesia transport fills,8275.2,24936.3,179,88.6,44.92

@@ -50,6 +50,7 @@ python team03/build_energy_dataset.py
 python team03/build_mappings.py
 python team03/build_analysis_tables.py
 python team03/build_supplementary_sources.py
+python team03/sensitivity_analysis.py
 python team03/validate_dataset.py
 python team03/make_figures.py
 python team03/make_dashboard.py
@@ -259,6 +260,9 @@ Working tree clean. The only files not committed are the gitignored raw download
 - Any change to `make_figures.py` figure code must be mirrored in `make_dashboard.py`
   (`_figures`, `_fig_csvs`, `_captions`, `_PNG_NAMES`, `_TITLES`) and in
   `web/method.html` (the "Code" sections). They are kept in sync manually.
+- Sensitivity + robustness numbers (how much each data decision moves the headline
+  figures) are in `team03/sensitivity_analysis.py` → `Datasets/sensitivity_analysis.csv`,
+  and summarised for the report/PPT in `team03/TECHNICAL_FINDINGS.md`.
 - The three flag columns are part of the `analysis_country_year.csv` contract;
   downstream (validation, figures, dashboard) assumes they exist.
 - `Services_Other` is a *computed* column (sum of 3 components), not a stored
