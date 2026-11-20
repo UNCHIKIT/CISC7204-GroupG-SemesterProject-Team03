@@ -529,19 +529,27 @@ def fig_percapita_scatter(df: pd.DataFrame) -> go.Figure:
 # Output 18: Kaya decomposition waterfall, China (B.3 method illustration)
 # --------------------------------------------------------------------------- #
 def fig_kaya_waterfall(df: pd.DataFrame) -> go.Figure:
-    tab = drivers_decomposition_data(df)
-    china = tab[tab["country"] == "China"].iloc[0]
+    """Kaya decomposition waterfall for China (full precision, exact sum)."""
+    pop = _wb_series(POP_JSON)
+    gdp = _wb_series(GDP_JSON)
+    iso3 = "CHN"
+    e = df[(df["code"] == "156") & (df["year"].isin([2000, 2022]))].set_index("year")["FEC"]
+    p00, p22 = pop[(iso3, 2000)], pop[(iso3, 2022)]
+    g00, g22 = gdp[(iso3, 2000)], gdp[(iso3, 2022)]
+    gp = np.log(p22 / p00) * 100
+    gy = np.log((g22 / p22) / (g00 / p00)) * 100
+    gi = np.log((e[2022] / g22) / (e[2000] / g00)) * 100
+    ge = gp + gy + gi  # exact additive identity
+
     fig = go.Figure(go.Waterfall(
         x=["Population", "Income per person", "Efficiency (E/GDP)", "Total E growth"],
         measure=["relative", "relative", "relative", "total"],
-        y=[china["population_pp"], china["income_per_person_pp"],
-           china["e_gdp_pp"], china["total_growth_pp"]],
+        y=[gp, gy, gi, ge],
         connector=dict(line=dict(color="#c8c8d0")),
         increasing=dict(marker=dict(color="#66c2a5")),
         decreasing=dict(marker=dict(color="#fc8d62")),
         totals=dict(marker=dict(color="#1a1a2e")),
-        text=[f"{v:+.1f}" for v in (china["population_pp"], china["income_per_person_pp"],
-                                    china["e_gdp_pp"], china["total_growth_pp"])],
+        text=[f"{v:+.1f}" for v in (gp, gy, gi, ge)],
         textposition="outside",
     ))
     fig.update_layout(
