@@ -275,7 +275,16 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
     for n in range(1, 12):
         png_uri = _png_to_uri(_PNG_NAMES[n])
         csv_uri = _csv_to_uri(csvs[n])
-        if n == 1:
+        if n in (6, 7):
+            # Static choropleths have no useful hover (hover_name is the numeric
+            # code only) and each embeds the ~3 MB geojson as an SVG with 242
+            # polygons. Render the PNG instead of an interactive figure: removes
+            # ~6.4 MB of geojson and two heavy SVG layers, which is what makes the
+            # page lag on scroll.
+            fig_html = (f'<img src="{png_uri}" alt="{_TITLES[n]}" '
+                        'style="width:100%;height:auto;border:1px solid var(--line);'
+                        'border-radius:10px;" loading="lazy">')
+        elif n == 1:
             fig_html = figs[n].to_html(include_plotlyjs=True, full_html=False, div_id=f"chart{n}")
             fig_html = _clean_plotlyjs(fig_html)
         else:
