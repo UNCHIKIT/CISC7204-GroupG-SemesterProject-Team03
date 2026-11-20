@@ -40,7 +40,7 @@ ul { padding-left:22px; }
 </head>
 <body>
 <nav><a href="index.html">Outputs</a><a href="#overview">Method</a><a href="index.html#data-dictionary">Data dictionary</a><a href="index.html#files">Files</a></nav>
-<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to eleven outputs</p></header>
+<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to fifteen outputs</p></header>
 <section id="overview">
 <h2>Overview</h2>
 <pre>un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)
@@ -50,7 +50,7 @@ ne_50m geojson ──────────┴─► country_region.csv ─►
                                                           │
                                               analysis_region_year.csv
                                                           │
-                                   eleven figures + this dashboard</pre>
+                                   fifteen figures + this dashboard</pre>
 <p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, <code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, <code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, <code>analysis_region_year.csv</code>.</p>
 </section>
 <section id="shared">
@@ -133,7 +133,7 @@ fig = px.bar(..., barmode='stack')</code></pre>
 <h3>Chart specification</h3><p>100% stacked bar, 2000 vs 2022, stacked by generation source. Caption states this is generation, not consumption, shown only as background.</p>
 </section>
 <section id="o10">
-<h2>Answer B — Drivers of consumption change</h2>
+<h2>Drivers of consumption change</h2>
 <h3>Input</h3><p>analysis_country_year.csv (FEC), World Bank SP.POP.TOTL, NY.GDP.MKTP.PP.KD, for eleven large consumers.</p>
 <h3>Transformation</h3><p>Kaya identity E = P x (GDP/P) x (E/GDP). Take log growth over 2000-2022 so the three components are exactly additive in percentage points; render with barmode='relative' so the usually negative E/GDP term stacks below the axis.</p>
 <h3>Code</h3><pre><code>ge = log(E22/E00)*100; gp = log(P22/P00)*100
@@ -142,13 +142,47 @@ gi = log((E22/GDP22)/(E00/GDP00))*100  # ge = gp + gy + gi</code></pre>
 <h3>Chart specification</h3><p>Horizontal stacked bars (Population, Income/person, E/GDP) summing to total growth, with a diamond marker for total E. Caption states this is observational and associative, not causal.</p>
 </section>
 <section id="o11">
-<h2>Answer A — Generation mix by region</h2>
+<h2>Generation mix by region</h2>
 <h3>Input</h3><p>OWID electricity-prod-source-stacked.csv, continent entities.</p>
 <h3>Transformation</h3><p>For each OWID continent (Africa, Asia, Europe, North America, South America, Oceania), sum the nine fuel columns for 2022, normalise to 100%, stack by fuel.</p>
 <h3>Code</h3><pre><code>r = ow[ow.Entity == region]
 share = 100 * r[r.Year == 2022][srcs].sum() / r[r.Year == 2022][srcs].sum().sum()
 fig = px.bar(..., barmode='stack')</code></pre>
 <h3>Chart specification</h3><p>100% stacked horizontal bar per continent, stacked by generation fuel. Generation, not consumption; the project's own region column merges the two Americas into one continent.</p>
+</section>
+<section id="o12">
+<h2>Generation mix by region (animated)</h2>
+<h3>Input</h3><p>OWID electricity-prod-source-stacked.csv, continent entities, 2000-2022.</p>
+<h3>Transformation</h3><p>Compute each continent's fuel share for every year, then animate with animation_frame='year' so a slider scrubs 2000-2022.</p>
+<h3>Code</h3><pre><code>d = region_year_mix  # region, year, source, share_pct
+fig = px.bar(d, x='region', y='share', color='source',
+             animation_frame='year', barmode='stack')</code></pre>
+<h3>Chart specification</h3><p>Stacked bar per continent, animated by year with slider + play button; y-axis fixed to 0-100%.</p>
+</section>
+<section id="o13">
+<h2>Generation mix, largest countries</h2>
+<h3>Input</h3><p>OWID electricity-prod-source-stacked.csv, ten largest consumers, 2022.</p>
+<h3>Transformation</h3><p>For each country sum the nine fuels for 2022, normalise to 100%, stack.</p>
+<h3>Code</h3><pre><code>share = 100 * c[c.Year == 2022][srcs].sum() / c[c.Year == 2022][srcs].sum().sum()
+fig = px.bar(..., barmode='stack')</code></pre>
+<h3>Chart specification</h3><p>Horizontal 100% stacked bar per country, ranked by total generation.</p>
+</section>
+<section id="o14">
+<h2>Carbon intensity of electricity</h2>
+<h3>Input</h3><p>OWID carbon-intensity-electricity.csv, ten largest consumers, 2000-2022.</p>
+<h3>Transformation</h3><p>Plot each country's gCO2/kWh as a line over 2000-2022.</p>
+<h3>Code</h3><pre><code>d = ci[ci.Entity.isin(countries) & ci.Year.between(2000, 2022)]
+fig = px.line(d, x='Year', y='Carbon intensity', color='Entity')</code></pre>
+<h3>Chart specification</h3><p>Multi-line chart, x=year, y=gCO2/kWh, one line per country.</p>
+</section>
+<section id="o15">
+<h2>Generation vs final consumption</h2>
+<h3>Input</h3><p>OWID world generation 2022; analysis_country_year.csv world FEC 2022.</p>
+<h3>Transformation</h3><p>Sum the nine fuels for world 2022 (generation) and sum FEC for 2022 (consumption); plot as two bars and annotate the gap.</p>
+<h3>Code</h3><pre><code>gen = world[world.Year == 2022][srcs].sum().sum()
+cons = df[df.year == 2022]['FEC'].sum()
+gap = gen - cons  # ~14% = losses + own-use + trade</code></pre>
+<h3>Chart specification</h3><p>Two bars (generation, consumption) with a caption noting the ~14% gap is why generation stays out of the sector shares.</p>
 </section>
 <section id="validation">
 <h2>Validation trace</h2>

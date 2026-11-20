@@ -31,8 +31,15 @@ COUNTRY_YEAR = DATASETS / "analysis_country_year.csv"
 REGION_YEAR = DATASETS / "analysis_region_year.csv"
 GEOJSON = DATASETS / "ne_50m_admin_0_countries.geojson"
 PROD_SOURCE = DATASETS / "owid_electricity_prod_source.csv"
+CARBON_INTENSITY = DATASETS / "carbon_intensity_electricity.csv"
 POP_JSON = DATASETS / "worldbank_population.json"
 GDP_JSON = DATASETS / "worldbank_gdp_ppp.json"
+
+MIX_COUNTRIES = ["China", "United States", "India", "Japan", "Russia",
+                 "Brazil", "South Korea", "Canada", "Germany", "France"]
+MIX_SOURCES = ["Other renewables", "Bioenergy", "Solar", "Wind", "Hydropower",
+               "Nuclear", "Gas", "Oil", "Coal"]
+MIX_REGIONS = ["Africa", "Asia", "Europe", "North America", "South America", "Oceania"]
 
 SECTORS = ["Industry", "Transport", "Residential", "Services_Other"]
 COMBINED_TO_MAIN = {"251": "250", "382": "380", "579": "578", "757": "756"}
@@ -352,6 +359,99 @@ def fig_generation_mix_regions() -> go.Figure:
     return fig
 
 
+# --------------------------------------------------------------------------- #
+# Output 12: generation mix by region, animated 2000-2022 (A.3 slider)
+# --------------------------------------------------------------------------- #
+def fig_generation_mix_regions_slider() -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    rows = []
+    for region in MIX_REGIONS:
+        r = ow[ow["Entity"] == region]
+        for yr in range(2000, 2023):
+            y = r[r["Year"] == yr]
+            tot = float(y[MIX_SOURCES].sum().sum())
+            for s in MIX_SOURCES:
+                rows.append({"region": region, "year": yr, "source": s,
+                             "share": 100 * float(y[s].sum()) / tot if tot else 0.0})
+    d = pd.DataFrame(rows)
+
+    fig = px.bar(d, x="region", y="share", color="source",
+                 animation_frame="year",
+                 title="Electricity generation mix by region, 2000-2022 (generation)",
+                 labels={"share": "Share of generation (%)", "region": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set1,
+                 category_orders={"region": MIX_REGIONS})
+    fig.update_layout(template="plotly_white", barmode="stack", yaxis_ticksuffix="%",
+                      xaxis_tickangle=-30)
+    fig.update_yaxes(range=[0, 100])
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 13: generation mix, largest countries 2022 (A.4)
+# --------------------------------------------------------------------------- #
+def fig_generation_mix_countries() -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    rows = []
+    for country in MIX_COUNTRIES:
+        c = ow[(ow["Entity"] == country) & (ow["Year"] == 2022)]
+        tot = float(c[MIX_SOURCES].sum().sum())
+        for s in MIX_SOURCES:
+            rows.append({"country": country, "source": s,
+                         "share": 100 * float(c[s].sum()) / tot if tot else 0.0})
+    d = pd.DataFrame(rows)
+    order = d.groupby("country")["share"].sum().sort_values(ascending=True).index.tolist()
+
+    fig = px.bar(d, x="share", y="country", color="source",
+                 title="Electricity generation mix, largest countries 2022 (generation)",
+                 labels={"share": "Share of generation (%)", "country": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set1,
+                 category_orders={"country": order})
+    fig.update_layout(template="plotly_white", barmode="stack", xaxis_ticksuffix="%")
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 14: carbon intensity, largest countries 2000-2022 (A.4)
+# --------------------------------------------------------------------------- #
+def fig_carbon_intensity() -> go.Figure:
+    ci = pd.read_csv(CARBON_INTENSITY)
+    d = ci[ci["Entity"].isin(MIX_COUNTRIES) & ci["Year"].between(2000, 2022)]
+    fig = px.line(d, x="Year", y="Carbon intensity", color="Entity",
+                  title="Carbon intensity of electricity, 2000-2022 (gCO₂/kWh)",
+                  labels={"Carbon intensity": "gCO₂/kWh", "Year": ""})
+    fig.update_layout(template="plotly_white")
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 15: generation vs consumption, world 2022 (A.5)
+# --------------------------------------------------------------------------- #
+def fig_generation_vs_consumption(df: pd.DataFrame) -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    w = ow[(ow["Entity"] == "World") & (ow["Year"] == 2022)]
+    generation = float(w[MIX_SOURCES].sum().sum())
+    consumption = float(df[df["year"] == 2022]["FEC"].sum())
+    gap = generation - consumption
+    gap_pct = 100 * gap / generation
+
+    d = pd.DataFrame({
+        "Quantity": ["Generation", "Final consumption"],
+        "TWh": [generation, consumption],
+    })
+    fig = px.bar(d, x="Quantity", y="TWh", color="Quantity",
+                 title="World electricity: generation vs final consumption, 2022",
+                 labels={"TWh": "TWh", "Quantity": ""},
+                 color_discrete_map={"Generation": "#1f77b4", "Final consumption": "#2ca02c"})
+    fig.update_layout(template="plotly_white", showlegend=False)
+    fig.add_annotation(
+        x=0.5, y=max(generation, consumption),
+        text=f"gap {gap:,.0f} TWh ({gap_pct:.0f}%) = losses + own-use + net trade",
+        showarrow=False, yshift=12, font=dict(size=12, color="#5b6070"),
+    )
+    return fig
+
+
 def main() -> int:
     df = load_country_year()
     reg = load_region_year()
@@ -367,6 +467,10 @@ def main() -> int:
         "output_8_generation_mix.png": fig_generation_mix(),
         "output_10_drivers_decomposition.png": fig_drivers_decomposition(df),
         "output_11_generation_mix_regions.png": fig_generation_mix_regions(),
+        "output_12_generation_mix_regions_slider.png": fig_generation_mix_regions_slider(),
+        "output_13_generation_mix_countries.png": fig_generation_mix_countries(),
+        "output_14_carbon_intensity.png": fig_carbon_intensity(),
+        "output_15_generation_vs_consumption.png": fig_generation_vs_consumption(df),
     }
 
     FIGURES.mkdir(parents=True, exist_ok=True)

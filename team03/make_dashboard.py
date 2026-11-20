@@ -142,6 +142,41 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
                                                     / float(r[r["Year"] == 2022][srcs].sum().sum()), 2)})
     reg_mix = pd.DataFrame(reg_mix_rows)
 
+    # 12: region x year mix (slider)
+    ry_rows = []
+    for region in mf.MIX_REGIONS:
+        r = ow[ow["Entity"] == region]
+        for yr in range(2000, 2023):
+            y = r[r["Year"] == yr]
+            tot = float(y[mf.MIX_SOURCES].sum().sum())
+            for s in mf.MIX_SOURCES:
+                ry_rows.append({"region": region, "year": yr, "source": s,
+                                "share_pct": round(100 * float(y[s].sum()) / tot, 2) if tot else 0.0})
+    region_year_mix = pd.DataFrame(ry_rows)
+
+    # 13: largest-country mix 2022
+    c_rows = []
+    for country in mf.MIX_COUNTRIES:
+        c = ow[(ow["Entity"] == country) & (ow["Year"] == 2022)]
+        tot = float(c[mf.MIX_SOURCES].sum().sum())
+        for s in mf.MIX_SOURCES:
+            c_rows.append({"country": country, "source": s,
+                           "share_pct": round(100 * float(c[s].sum()) / tot, 2) if tot else 0.0})
+    country_mix = pd.DataFrame(c_rows)
+
+    # 14: carbon intensity
+    ci = pd.read_csv(DATASETS / "carbon_intensity_electricity.csv")
+    carbon = ci[ci["Entity"].isin(mf.MIX_COUNTRIES) & ci["Year"].between(2000, 2022)][
+        ["Entity", "Year", "Carbon intensity"]
+    ].rename(columns={"Entity": "country", "Carbon intensity": "gco2_kwh"})
+
+    # 15: generation vs consumption (world 2022)
+    w22 = ow[(ow["Entity"] == "World") & (ow["Year"] == 2022)]
+    gen = float(w22[mf.MIX_SOURCES].sum().sum())
+    cons = float(df[df["year"] == 2022]["FEC"].sum())
+    gen_cons = pd.DataFrame({"quantity": ["Generation", "Final consumption"],
+                             "twh": [round(gen, 1), round(cons, 1)]})
+
     return {
         1: world.merge(fixed_s, on="year"),
         2: top10,
@@ -154,6 +189,10 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
         9: df[["code", "area", "year", "FEC"]].rename(columns={"FEC": "fec_twh"}),
         10: drivers,
         11: reg_mix,
+        12: region_year_mix,
+        13: country_mix,
+        14: carbon,
+        15: gen_cons,
     }
 
 
@@ -187,6 +226,15 @@ def _captions() -> dict[int, str]:
         11: "Electricity generation mix by OWID continent, 2022. Generation, not final "
             "consumption, shown for background; the project's own region column merges "
             "North and South America into one 'Americas' continent.",
+        12: "Generation mix by region animated across 2000-2022. Use the slider or "
+            "play button to scrub the year; shares are % of each region's own generation.",
+        13: "Generation mix of the ten largest consumers, 2022. China and India are "
+            "coal-led; Brazil/Canada/France are hydro/nuclear-based.",
+        14: "Carbon intensity of electricity, 2000-2022. World falls 527→490; Japan "
+            "rises 424→520 after Fukushima; France stays ~80.",
+        15: "World generation vs final consumption, 2022. The ~14% gap is "
+            "transmission/distribution losses, plant own-use and net trade - the reason "
+            "generation stays out of the sector shares.",
     }
 
 
@@ -203,6 +251,10 @@ def _figures(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, object]:
         9: mf.fig_map_slider(df),
         10: mf.fig_drivers_decomposition(df),
         11: mf.fig_generation_mix_regions(),
+        12: mf.fig_generation_mix_regions_slider(),
+        13: mf.fig_generation_mix_countries(),
+        14: mf.fig_carbon_intensity(),
+        15: mf.fig_generation_vs_consumption(df),
     }
 
 
@@ -218,6 +270,10 @@ _PNG_NAMES = {
     9: "output_9_map_slider.png",
     10: "output_10_drivers_decomposition.png",
     11: "output_11_generation_mix_regions.png",
+    12: "output_12_generation_mix_regions_slider.png",
+    13: "output_13_generation_mix_countries.png",
+    14: "output_14_carbon_intensity.png",
+    15: "output_15_generation_vs_consumption.png",
 }
 
 _TITLES = {
@@ -230,8 +286,12 @@ _TITLES = {
     7: "Output 7 — World map, 2022",
     8: "Output 8 — Generation mix (background)",
     9: "Output 6-7 — Animated world map (1990-2022)",
-    10: "Answer B — Drivers of consumption change",
-    11: "Answer A — Generation mix by region (2022)",
+    10: "Drivers of consumption change",
+    11: "Generation mix by region (2022)",
+    12: "Generation mix by region (2000-2022, animated)",
+    13: "Generation mix, largest countries (2022)",
+    14: "Carbon intensity of electricity (2000-2022)",
+    15: "Generation vs final consumption (2022)",
 }
 
 
@@ -272,7 +332,7 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
     parts.append("</section>\n")
 
     parts.append("<section id=\"outputs\">\n<h2>The outputs</h2>\n")
-    for n in range(1, 12):
+    for n in range(1, 16):
         png_uri = _png_to_uri(_PNG_NAMES[n])
         csv_uri = _csv_to_uri(csvs[n])
         if n in (6, 7):
@@ -440,7 +500,7 @@ def _method_sections() -> list[dict]:
                  "fig = px.bar(..., barmode='stack')",
          "spec": "100% stacked bar, 2000 vs 2022, stacked by generation source. Caption "
                  "states this is generation, not consumption, shown only as background."},
-        {"id": "o10", "title": "Answer B — Drivers of consumption change",
+        {"id": "o10", "title": "Drivers of consumption change",
          "input": "analysis_country_year.csv (FEC), World Bank SP.POP.TOTL, "
                   "NY.GDP.MKTP.PP.KD, for eleven large consumers.",
          "trans": "Kaya identity E = P x (GDP/P) x (E/GDP). Take log growth over "
@@ -453,7 +513,7 @@ def _method_sections() -> list[dict]:
          "spec": "Horizontal stacked bars (Population, Income/person, E/GDP) summing to "
                  "total growth, with a diamond marker for total E. Caption states this is "
                  "observational and associative, not causal."},
-        {"id": "o11", "title": "Answer A — Generation mix by region",
+        {"id": "o11", "title": "Generation mix by region",
          "input": "OWID electricity-prod-source-stacked.csv, continent entities.",
          "trans": "For each OWID continent (Africa, Asia, Europe, North America, South "
                   "America, Oceania), sum the nine fuel columns for 2022, normalise to "
@@ -464,6 +524,36 @@ def _method_sections() -> list[dict]:
          "spec": "100% stacked horizontal bar per continent, stacked by generation fuel. "
                  "Generation, not consumption; the project's own region column merges the "
                  "two Americas into one continent."},
+        {"id": "o12", "title": "Generation mix by region (animated)",
+         "input": "OWID electricity-prod-source-stacked.csv, continent entities, 2000-2022.",
+         "trans": "Compute each continent's fuel share for every year, then animate with "
+                  "animation_frame='year' so a slider scrubs 2000-2022.",
+         "code": "d = region_year_mix  # region, year, source, share_pct\n"
+                 "fig = px.bar(d, x='region', y='share', color='source',\n"
+                 "             animation_frame='year', barmode='stack')",
+         "spec": "Stacked bar per continent, animated by year with slider + play button; "
+                 "y-axis fixed to 0-100%."},
+        {"id": "o13", "title": "Generation mix, largest countries",
+         "input": "OWID electricity-prod-source-stacked.csv, ten largest consumers, 2022.",
+         "trans": "For each country sum the nine fuels for 2022, normalise to 100%, stack.",
+         "code": "share = 100 * c[c.Year == 2022][srcs].sum() / c[c.Year == 2022][srcs].sum().sum()\n"
+                 "fig = px.bar(..., barmode='stack')",
+         "spec": "Horizontal 100% stacked bar per country, ranked by total generation."},
+        {"id": "o14", "title": "Carbon intensity of electricity",
+         "input": "OWID carbon-intensity-electricity.csv, ten largest consumers, 2000-2022.",
+         "trans": "Plot each country's gCO2/kWh as a line over 2000-2022.",
+         "code": "d = ci[ci.Entity.isin(countries) & ci.Year.between(2000, 2022)]\n"
+                 "fig = px.line(d, x='Year', y='Carbon intensity', color='Entity')",
+         "spec": "Multi-line chart, x=year, y=gCO2/kWh, one line per country."},
+        {"id": "o15", "title": "Generation vs final consumption",
+         "input": "OWID world generation 2022; analysis_country_year.csv world FEC 2022.",
+         "trans": "Sum the nine fuels for world 2022 (generation) and sum FEC for 2022 "
+                  "(consumption); plot as two bars and annotate the gap.",
+         "code": "gen = world[world.Year == 2022][srcs].sum().sum()\n"
+                 "cons = df[df.year == 2022]['FEC'].sum()\n"
+                 "gap = gen - cons  # ~14% = losses + own-use + trade",
+         "spec": "Two bars (generation, consumption) with a caption noting the ~14% gap is "
+                 "why generation stays out of the sector shares."},
     ]
 
 
@@ -476,7 +566,7 @@ def build_method_html() -> str:
                  '<a href="index.html#files">Files</a></nav>\n')
 
     parts.append("<header><h1>Method — how the data becomes the charts</h1>"
-                 "<p class=\"subtitle\">From raw UN SDMX XML to eleven outputs</p></header>\n")
+                 "<p class=\"subtitle\">From raw UN SDMX XML to fifteen outputs</p></header>\n")
 
     parts.append("<section id=\"overview\">\n<h2>Overview</h2>\n<pre>"
                  "un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)\n"
@@ -486,7 +576,7 @@ def build_method_html() -> str:
                  "                                                          │\n"
                  "                                              analysis_region_year.csv\n"
                  "                                                          │\n"
-                 "                                   eleven figures + this dashboard</pre>\n"
+                 "                                   fifteen figures + this dashboard</pre>\n"
                  "<p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, "
                  "<code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, "
                  "<code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, "
