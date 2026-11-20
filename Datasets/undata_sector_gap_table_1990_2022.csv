@@ -1,0 +1,219 @@
+code,area,FEC_2022_TWh,Industry,Transport,Residential,Services/Other,share_%,cum_%,any_gap
+156,China,8199.6,complete,complete,complete,complete,32.88,32.9,False
+840,United States of America,4006.2,complete,complete,complete,complete,16.07,49.0,False
+356,India,1403.4,complete,complete,complete,complete,5.63,54.6,False
+392,Japan,902.0,complete,complete,complete,complete,3.62,58.2,False
+643,Russian Federation,822.8,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,3.3,61.5,True
+076,Brazil,550.9,complete,complete,complete,complete,2.21,63.7,False
+410,Republic of Korea,541.7,complete,complete,complete,complete,2.17,65.9,False
+124,Canada,533.0,complete,complete,complete,complete,2.14,68.0,False
+276,Germany,477.2,missing 1: 1990-1990,missing 1: 1990-1990,missing 1: 1990-1990,missing 1: 1990-1990,1.91,69.9,True
+251,France-Monaco,415.0,complete,complete,complete,complete,1.66,71.6,False
+364,Iran (Islamic Republic of),316.0,complete,missing 9: 1990-1998,complete,complete,1.27,72.9,True
+682,Saudi Arabia,309.5,complete,ABSENT,complete,complete,1.24,74.1,True
+484,Mexico,300.0,complete,complete,complete,complete,1.2,75.3,False
+360,Indonesia,294.2,complete,"missing 19: 1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2016",complete,complete,1.18,76.5,True
+382,Italy-San Marino,287.0,complete,complete,complete,complete,1.15,77.6,False
+792,Turkey,282.3,complete,complete,complete,complete,1.13,78.8,False
+826,United Kingdom of Great Britain and Northern Ireland,272.4,complete,complete,complete,complete,1.09,79.8,False
+704,Viet Nam,255.8,complete,missing 28: 1995-2022,complete,complete,1.03,80.9,True
+724,Spain,224.4,complete,complete,complete,complete,0.9,81.8,False
+036,Australia,220.8,complete,complete,complete,complete,0.89,82.7,False
+764,Thailand,208.2,complete,missing 9: 1990-1998,complete,complete,0.83,83.5,True
+710,South Africa,186.3,complete,complete,complete,complete,0.75,84.2,False
+818,Egypt,172.4,complete,missing 22: 1990-2011,complete,complete,0.69,84.9,True
+458,Malaysia,168.4,complete,missing 7: 1990-1996,complete,complete,0.68,85.6,True
+616,Poland,139.9,complete,complete,complete,complete,0.56,86.2,False
+784,United Arab Emirates,134.6,complete,ABSENT,complete,complete,0.54,86.7,True
+032,Argentina,124.4,complete,complete,complete,complete,0.5,87.2,False
+752,Sweden,122.3,complete,complete,complete,complete,0.49,87.7,False
+579,Norway-Svalbard and Jan Mayen Islands,115.0,complete,complete,complete,complete,0.46,88.2,False
+586,Pakistan,110.3,missing 3: 1990-1992,missing 6: 2017-2022,complete,complete,0.44,88.6,True
+528,Netherlands,103.7,complete,complete,complete,complete,0.42,89.0,False
+050,Bangladesh,93.3,complete,missing 31: 1990-2020,complete,complete,0.37,89.4,True
+608,Philippines,91.3,complete,complete,complete,complete,0.37,89.8,False
+398,Kazakhstan,83.2,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.33,90.1,True
+804,Ukraine,80.5,missing 2: 1990-1991,missing 2: 1990-1991,missing 6: 1990-1995,missing 2: 1990-1991,0.32,90.4,True
+152,Chile,79.4,complete,complete,complete,complete,0.32,90.7,False
+246,Finland,76.9,complete,complete,complete,complete,0.31,91.0,False
+056,Belgium,76.2,complete,complete,complete,complete,0.31,91.4,False
+170,Colombia,70.2,complete,complete,complete,complete,0.28,91.6,False
+862,Venezuela (Bolivarian Republic of),68.0,complete,complete,complete,missing 4: 1991-1994,0.27,91.9,True
+012,Algeria,67.5,complete,complete,complete,missing 11: 1990-2000,0.27,92.2,True
+040,Austria,63.7,complete,complete,complete,complete,0.26,92.4,False
+376,Israel,63.6,complete,ABSENT,complete,complete,0.26,92.7,True
+414,Kuwait,61.5,missing 5: 1998-2002,ABSENT,complete,complete,0.25,93.0,True
+203,Czechia,58.0,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.23,93.2,True
+368,Iraq,57.4,missing 8: 1996-2003,ABSENT,missing 14: 1990-2003,complete,0.23,93.4,True
+757,Switzerland-Liechtenstein,57.0,complete,complete,complete,complete,0.23,93.6,False
+860,Uzbekistan,56.6,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.23,93.9,True
+702,Singapore,54.9,complete,missing 3: 1990-1992,complete,complete,0.22,94.1,True
+604,Peru,52.2,complete,missing 17: 1990-2006,complete,complete,0.21,94.3,True
+620,Portugal,48.7,complete,complete,complete,complete,0.2,94.5,False
+634,Qatar,48.2,complete,missing 32: 1990-2021,complete,complete,0.19,94.7,True
+300,Greece,48.1,complete,complete,complete,complete,0.19,94.9,False
+344,"China, Hong Kong Special Administrative Region",44.9,complete,ABSENT,complete,complete,0.18,95.1,True
+642,Romania,42.7,complete,complete,complete,complete,0.17,95.2,False
+348,Hungary,41.3,complete,complete,complete,complete,0.17,95.4,False
+512,Oman,39.4,complete,ABSENT,complete,complete,0.16,95.6,True
+554,New Zealand,38.6,complete,complete,complete,complete,0.15,95.7,False
+504,Morocco,36.0,complete,missing 7: 1990-1996,complete,complete,0.14,95.9,True
+048,Bahrain,34.4,complete,ABSENT,complete,complete,0.14,96.0,True
+566,Nigeria,33.1,complete,ABSENT,complete,complete,0.13,96.1,True
+112,Belarus,31.2,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.13,96.3,True
+208,Denmark,30.8,complete,complete,complete,complete,0.12,96.4,False
+100,Bulgaria,30.7,complete,complete,complete,complete,0.12,96.5,False
+372,Ireland,30.3,complete,complete,complete,complete,0.12,96.6,False
+688,Serbia,29.0,missing 15: 1990-2004,missing 15: 1990-2004,missing 15: 1990-2004,missing 15: 1990-2004,0.12,96.7,True
+434,Libya,27.9,complete,ABSENT,complete,complete,0.11,96.8,True
+218,Ecuador,27.8,complete,missing 9: 1990-1998,complete,complete,0.11,97.0,True
+703,Slovakia,22.9,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.09,97.0,True
+400,Jordan,20.6,complete,ABSENT,complete,complete,0.08,97.1,True
+214,Dominican Republic,20.3,complete,missing 18: 1990-2007,missing 7: 1990-1996,complete,0.08,97.2,True
+031,Azerbaijan,20.3,missing 2: 1990-1991,missing 3: 1990-1992,missing 2: 1990-1991,missing 2: 1990-1991,0.08,97.3,True
+760,Syrian Arab Republic,19.5,complete,ABSENT,complete,missing 16: 1990-2005,0.08,97.4,True
+408,Democratic People's Republic of Korea,19.3,complete,missing 27: 1990-2016,missing 27: 1990-2016,complete,0.08,97.4,True
+352,Iceland,18.9,complete,missing 22: 1990-2011,complete,complete,0.08,97.5,True
+788,Tunisia,18.5,complete,complete,complete,complete,0.07,97.6,False
+288,Ghana,17.5,complete,missing 21: 1990-2010,complete,complete,0.07,97.7,True
+104,Myanmar,17.1,complete,ABSENT,complete,missing 7: 2008-2014,0.07,97.7,True
+191,Croatia,16.2,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.06,97.8,True
+795,Turkmenistan,15.2,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.06,97.9,True
+144,Sri Lanka,14.7,complete,ABSENT,complete,complete,0.06,97.9,True
+600,Paraguay,14.7,complete,"missing 25: 1990,1991,1992,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022",complete,complete,0.06,98.0,True
+762,Tajikistan,14.6,missing 2: 1990-1991,missing 3: 1990-1992,missing 2: 1990-1991,missing 2: 1990-1991,0.06,98.0,True
+894,Zambia,13.8,complete,missing 5: 1990-1994,complete,complete,0.06,98.1,True
+024,Angola,13.8,complete,ABSENT,complete,"missing 31: 1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2019,2020,2021,2022",0.06,98.2,True
+268,Georgia,13.4,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.05,98.2,True
+116,Cambodia,13.4,complete,ABSENT,complete,complete,0.05,98.3,True
+729,Sudan,13.3,missing 22: 1990-2011,ABSENT,missing 22: 1990-2011,missing 22: 1990-2011,0.05,98.3,True
+192,Cuba,13.2,complete,complete,complete,complete,0.05,98.4,False
+417,Kyrgyzstan,13.1,missing 2: 1990-1991,"missing 8: 1990,1991,2007,2008,2009,2010,2011,2012",missing 2: 1990-1991,missing 2: 1990-1991,0.05,98.4,True
+508,Mozambique,13.0,complete,ABSENT,complete,complete,0.05,98.4,True
+705,Slovenia,13.0,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.05,98.5,True
+180,Democratic Republic of the Congo,12.9,complete,"missing 29: 1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2016,2017,2018,2019,2020,2021,2022",complete,complete,0.05,98.6,True
+591,Panama,12.7,complete,missing 16: 1998-2013,complete,complete,0.05,98.6,True
+858,Uruguay,11.8,complete,missing 26: 1990-2015,complete,complete,0.05,98.6,True
+320,Guatemala,11.3,complete,ABSENT,complete,complete,0.05,98.7,True
+231,Ethiopia,11.2,missing 4: 1990-1993,missing 31: 1990-2020,missing 4: 1990-1993,missing 4: 1990-1993,0.04,98.7,True
+418,Lao People's Democratic Republic,11.1,complete,missing 32: 1990-2021,complete,complete,0.04,98.8,True
+440,Lithuania,10.7,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.04,98.8,True
+070,Bosnia and Herzegovina,10.6,missing 2: 1990-1991,missing 18: 1990-2007,missing 2: 1990-1991,missing 2: 1990-1991,0.04,98.9,True
+188,Costa Rica,10.4,complete,missing 24: 1999-2022,complete,complete,0.04,98.9,True
+404,Kenya,10.0,complete,ABSENT,complete,complete,0.04,98.9,True
+384,Côte d’Ivoire,9.9,complete,missing 25: 1998-2022,complete,complete,0.04,99.0,True
+068,Bolivia (Plurinational State of),9.5,complete,missing 24: 1990-2013,complete,complete,0.04,99.0,True
+716,Zimbabwe,9.2,complete,missing 31: 1992-2022,complete,complete,0.04,99.1,True
+524,Nepal,9.1,complete,complete,complete,complete,0.04,99.1,False
+780,Trinidad and Tobago,8.7,complete,ABSENT,complete,complete,0.03,99.1,True
+496,Mongolia,8.1,complete,missing 15: 1990-2004,complete,complete,0.03,99.2,True
+340,Honduras,7.6,complete,ABSENT,complete,complete,0.03,99.2,True
+834,United Republic of Tanzania,7.6,complete,ABSENT,complete,complete,0.03,99.2,True
+275,State of Palestine,7.2,complete,"missing 17: 1990,1991,1992,1993,1994,1995,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020",complete,complete,0.03,99.3,True
+222,El Salvador,7.2,complete,missing 31: 1990-2020,complete,complete,0.03,99.3,True
+233,Estonia,7.1,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.03,99.3,True
+686,Senegal,6.8,complete,ABSENT,complete,complete,0.03,99.3,True
+051,Armenia,6.7,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.03,99.4,True
+008,Albania,6.6,complete,"missing 26: 1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018",complete,complete,0.03,99.4,True
+428,Latvia,6.5,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.03,99.4,True
+442,Luxembourg,6.2,complete,complete,complete,complete,0.02,99.5,False
+120,Cameroon,6.0,complete,ABSENT,complete,complete,0.02,99.5,True
+807,The former Yugoslav Republic of Macedonia,5.9,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,missing 2: 1990-1991,0.02,99.5,True
+412,Kosovo,5.7,missing 10: 1990-1999,ABSENT,missing 10: 1990-1999,missing 10: 1990-1999,0.02,99.5,True
+446,"China, Macao Special Administrative Region",5.3,complete,missing 29: 1990-2018,complete,complete,0.02,99.5,True
+004,Afghanistan,4.9,complete,ABSENT,complete,complete,0.02,99.6,True
+196,Cyprus,4.9,complete,missing 32: 1990-2021,complete,complete,0.02,99.6,True
+096,Brunei Darussalam,4.6,complete,ABSENT,complete,complete,0.02,99.6,True
+598,Papua New Guinea,4.5,complete,ABSENT,complete,complete,0.02,99.6,True
+498,Republic of Moldova,4.0,missing 2: 1990-1991,missing 4: 1990-1993,missing 2: 1990-1991,missing 2: 1990-1991,0.02,99.6,True
+466,Mali,4.0,complete,ABSENT,complete,complete,0.02,99.7,True
+558,Nicaragua,4.0,complete,ABSENT,complete,complete,0.02,99.7,True
+072,Botswana,3.9,complete,ABSENT,complete,complete,0.02,99.7,True
+800,Uganda,3.9,complete,ABSENT,complete,complete,0.02,99.7,True
+388,Jamaica,3.5,complete,ABSENT,complete,complete,0.01,99.7,True
+516,Namibia,3.2,missing 10: 1990-1999,ABSENT,missing 10: 1990-1999,missing 1: 1990-1990,0.01,99.7,True
+887,Yemen,3.1,missing 12: 1990-2001,ABSENT,"missing 2: 1990,1997",missing 1: 1990-1990,0.01,99.7,True
+540,New Caledonia,3.1,complete,ABSENT,missing 18: 1990-2007,complete,0.01,99.8,True
+422,Lebanon,2.9,complete,ABSENT,complete,complete,0.01,99.8,True
+480,Mauritius,2.9,complete,missing 31: 1990-2020,complete,complete,0.01,99.8,True
+324,Guinea,2.8,complete,ABSENT,complete,complete,0.01,99.8,True
+854,Burkina Faso,2.7,complete,"missing 17: 1990,1991,1992,1993,1994,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021",complete,complete,0.01,99.8,True
+470,Malta,2.7,missing 1: 1990-1990,missing 27: 1990-2016,complete,complete,0.01,99.8,True
+499,Montenegro,2.6,missing 15: 1990-2004,missing 15: 1990-2004,missing 15: 1990-2004,missing 15: 1990-2004,0.01,99.8,True
+064,Bhutan,2.5,complete,ABSENT,complete,complete,0.01,99.8,True
+266,Gabon,2.4,complete,missing 4: 1990-1993,complete,complete,0.01,99.8,True
+450,Madagascar,2.1,complete,ABSENT,complete,complete,0.01,99.8,True
+044,Bahamas,2.0,complete,ABSENT,complete,complete,0.01,99.9,True
+740,Suriname,1.8,complete,ABSENT,complete,complete,0.01,99.9,True
+178,Congo,1.8,complete,ABSENT,complete,missing 25: 1990-2014,0.01,99.9,True
+454,Malawi,1.7,complete,ABSENT,complete,complete,0.01,99.9,True
+478,Mauritania,1.7,complete,ABSENT,complete,complete,0.01,99.9,True
+768,Togo,1.7,complete,ABSENT,complete,complete,0.01,99.9,True
+204,Benin,1.5,complete,missing 32: 1990-2021,complete,complete,0.01,99.9,True
+748,Eswatini,1.4,complete,missing 32: 1990-2021,complete,complete,0.01,99.9,True
+562,Niger,1.4,complete,ABSENT,complete,complete,0.01,99.9,True
+462,Maldives,1.1,missing 9: 1991-1999,ABSENT,complete,complete,0.0,99.9,True
+328,Guyana,1.0,complete,ABSENT,complete,complete,0.0,99.9,True
+242,Fiji,1.0,complete,ABSENT,complete,complete,0.0,99.9,True
+332,Haiti,0.9,complete,ABSENT,complete,complete,0.0,99.9,True
+226,Equatorial Guinea,0.9,complete,ABSENT,complete,missing 21: 1990-2010,0.0,99.9,True
+426,Lesotho,0.9,complete,ABSENT,complete,complete,0.0,99.9,True
+052,Barbados,0.9,complete,ABSENT,complete,complete,0.0,99.9,True
+646,Rwanda,0.9,complete,ABSENT,complete,missing 8: 2007-2014,0.0,99.9,True
+533,Aruba,0.8,missing 23: 2000-2022,ABSENT,complete,missing 10: 1990-1999,0.0,99.9,True
+531,Curaçao,0.8,missing 22: 1990-2011,ABSENT,missing 22: 1990-2011,missing 22: 1990-2011,0.0,99.9,True
+262,Djibouti,0.7,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+136,Cayman Islands,0.7,complete,ABSENT,complete,complete,0.0,99.9,True
+258,French Polynesia,0.6,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+084,Belize,0.6,complete,ABSENT,complete,complete,0.0,99.9,True
+728,South Sudan,0.5,missing 27: 1990-2016,ABSENT,missing 22: 1990-2011,missing 22: 1990-2011,0.0,99.9,True
+690,Seychelles,0.5,complete,ABSENT,complete,complete,0.0,99.9,True
+706,Somalia,0.5,missing 20: 1990-2009,ABSENT,ABSENT,complete,0.0,99.9,True
+020,Andorra,0.5,complete,ABSENT,complete,complete,0.0,99.9,True
+060,Bermuda,0.5,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+304,Greenland,0.4,complete,ABSENT,complete,missing 14: 1990-2003,0.0,99.9,True
+234,Faroe Islands,0.4,complete,ABSENT,complete,complete,0.0,99.9,True
+270,Gambia,0.4,missing 12: 1990-2001,ABSENT,ABSENT,complete,0.0,99.9,True
+626,Timor-Leste,0.4,ABSENT,ABSENT,missing 12: 1990-2001,missing 12: 1990-2001,0.0,99.9,True
+662,Saint Lucia,0.4,complete,ABSENT,complete,complete,0.0,99.9,True
+132,Cabo Verde,0.4,complete,ABSENT,complete,complete,0.0,99.9,True
+232,Eritrea,0.4,missing 4: 1990-1993,ABSENT,missing 4: 1990-1993,missing 4: 1990-1993,0.0,99.9,True
+430,Liberia,0.3,missing 31: 1990-2020,ABSENT,missing 31: 1990-2020,complete,0.0,99.9,True
+534,Sint Maarten (Dutch part),0.3,missing 22: 1990-2011,ABSENT,missing 22: 1990-2011,missing 22: 1990-2011,0.0,99.9,True
+108,Burundi,0.3,complete,ABSENT,complete,complete,0.0,99.9,True
+028,Antigua and Barbuda,0.3,complete,ABSENT,complete,complete,0.0,99.9,True
+148,Chad,0.3,complete,ABSENT,complete,complete,0.0,99.9,True
+796,Turks and Caicos Islands,0.3,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+694,Sierra Leone,0.3,complete,ABSENT,complete,complete,0.0,99.9,True
+092,British Virgin Islands,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+016,American Samoa,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+308,Grenada,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+624,Guinea-Bissau,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+882,Samoa,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+659,Saint Kitts and Nevis,0.2,complete,ABSENT,complete,complete,0.0,99.9,True
+663,Saint Martin (French Part),0.2,missing 21: 1990-2010,ABSENT,missing 21: 1990-2010,missing 21: 1990-2010,0.0,99.9,True
+292,Gibraltar,0.2,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+580,Northern Mariana Islands,0.2,ABSENT,ABSENT,missing 2: 1990-1991,missing 2: 1990-1991,0.0,99.9,True
+660,Anguilla,0.1,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+670,Saint Vincent and the Grenadines,0.1,complete,ABSENT,complete,complete,0.0,99.9,True
+776,Tonga,0.1,ABSENT,ABSENT,missing 19: 1990-2008,complete,0.0,99.9,True
+140,Central African Republic,0.1,complete,ABSENT,complete,complete,0.0,99.9,True
+174,Comoros,0.1,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+090,Solomon Islands,0.1,complete,ABSENT,complete,complete,0.0,99.9,True
+212,Dominica,0.1,missing 10: 1990-1999,ABSENT,complete,complete,0.0,99.9,True
+678,Sao Tome and Principe,0.1,missing 12: 1999-2010,ABSENT,missing 2: 1999-2000,complete,0.0,99.9,True
+535,"Bonaire, Sint Eustatius and Saba",0.1,missing 22: 1990-2011,ABSENT,missing 22: 1990-2011,missing 22: 1990-2011,0.0,99.9,True
+585,Palau,0.1,missing 2: 1990-1991,ABSENT,missing 2: 1990-1991,missing 2: 1990-1991,0.0,99.9,True
+583,Micronesia (Federated States of),0.1,missing 2: 1990-1991,ABSENT,missing 2: 1990-1991,missing 2: 1990-1991,0.0,99.9,True
+548,Vanuatu,0.1,complete,ABSENT,complete,complete,0.0,99.9,True
+652,Saint Barthélemy,0.1,missing 21: 1990-2010,ABSENT,missing 21: 1990-2010,missing 21: 1990-2010,0.0,99.9,True
+184,Cook Islands,0.0,ABSENT,ABSENT,ABSENT,complete,0.0,99.9,True
+238,Falkland Islands (Malvinas),0.0,complete,ABSENT,complete,complete,0.0,99.9,True
+296,Kiribati,0.0,missing 10: 1990-1999,ABSENT,complete,missing 10: 1990-1999,0.0,99.9,True
+570,Niue,0.0,missing 15: 1990-2004,ABSENT,complete,complete,0.0,99.9,True
+500,Montserrat,0.0,complete,ABSENT,complete,complete,0.0,99.9,True
+520,Nauru,0.0,missing 20: 1990-2009,ABSENT,complete,complete,0.0,99.9,True
+654,Saint Helena,0.0,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+666,Saint Pierre and Miquelon,0.0,missing 20: 1990-2009,ABSENT,complete,complete,0.0,99.9,True
+798,Tuvalu,0.0,ABSENT,ABSENT,complete,complete,0.0,99.9,True
+876,Wallis and Futuna Islands,0.0,ABSENT,ABSENT,complete,complete,0.0,99.9,True

@@ -1,5 +1,40 @@
 # Team 03 — Handoff: Data Consistency & Supplementary Source Verification (Remaining Work)
 
+> **RESOLVED 2026-11-21.** All open items below are now closed. Summary of the
+> final decisions (see `HANDOFF.md` §5 and `DATA_PIPELINE.md` §5 for the applied
+> numeric decisions, and `Datasets/supplementary_source_register.csv` for the
+> per-country register):
+>
+> * **Pakistan transport 2020-2022 — sourced.** Pakistan Railways *Yearbook 2023-24*
+>   (Ministry of Railways) "Fuel consumption" table records electric energy = Nil for
+>   FY 2020-21, 2021-22, 2022-23; electric-locomotive service is suspended (nil
+>   electric locomotives). Transport 2020-22 = 0 is now a sourced value, not a
+>   convention. Still `flag_reported_nil = 1`.
+> * **Pakistan 2019 transport — resolved.** SBP Table 2.3's 2019-20 row does not
+>   reconcile to its total (−10,001 GWh), but the *traction* cell is unambiguously
+>   "–" (nil) and the Railways yearbook independently confirms nil electric energy
+>   for that year. The caveat applies only to non-traction columns we do not use.
+> * **Pakistan year convention — confirmed.** 2020 = FY 2020-21, 2021 = FY 2021-22,
+>   2022 = FY 2022-23 (all Nil in the Railways yearbook).
+> * **Indonesia — applied.** The 9 HEESI fills (2000-2007, 2016) are written into
+>   `analysis_country_year.csv` with a new `flag_indonesia_heesi` column; 1990-1999
+>   remain missing.
+> * **Malaysia — closed as documented-missing.** Archived NEB 2012 (Wayback
+>   `20220725103818`) Figure 31 reports transport "–" (not collected) before 2006;
+>   1990-1996 stays missing (KTM Komuter Aug 1995, STAR LRT Dec 1996 = small,
+>   unquantified).
+> * **Saudi Arabia — still unresolved** (no transport category anywhere; Riyadh Metro
+>   opened late 2024).
+> * **Iran — not accessible** (Persian only).
+> * **Bangladesh — assessed.** Real transport gap (31/33 years); Bangladesh Railway
+>   is diesel-hauled and Dhaka MRT Line-6 opened only 28 Dec 2022, so transport is
+>   nil in practice but is left missing (no numeric national source).
+>
+> Data consistency re-verified after the fills: sector-sum == FEC still 100%
+> (`validate_dataset.py`).
+
+---
+
 > Companion to `HANDOFF.md`. This one hands off the **unfinished** part of the
 > project: finalising data consistency and the supplementary national-source
 > verification, with the open Pakistan issues as the priority. Everything here

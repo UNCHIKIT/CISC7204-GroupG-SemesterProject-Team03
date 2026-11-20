@@ -5,7 +5,7 @@ Step 4 of the Team 03 data pipeline.
 Reads the cleaned ``electricity_consumption_1990_2023.csv`` (TJ), restricts to
 1990-2022, converts to TWh (``OBS_VALUE / 3600``), pivots each
 ``(REF_AREA, year)`` into the four sectors plus the ``B25_FEC`` total, applies
-the three documented data decisions (each with a 0/1 flag), then joins the
+the four documented data decisions (each with a 0/1 flag), then joins the
 country/region mapping and writes:
 
 * ``Datasets/analysis_country_year.csv``
@@ -41,7 +41,7 @@ RESIDENTIAL = "B50_1231"
 SERVICES = ["B48_1232", "B49_1235", "B51_1234"]
 FEC = "B25_FEC"
 
-FLAGS = ["flag_germany_linked", "flag_fec_recomputed", "flag_reported_nil"]
+FLAGS = ["flag_germany_linked", "flag_fec_recomputed", "flag_reported_nil", "flag_indonesia_heesi"]
 
 COLUMNS = [
     "code", "area", "iso2", "iso3", "admin", "region", "subregion", "year",
@@ -151,7 +151,8 @@ def main() -> int:
     download_ageb_pdf()
     ger = germany_1990(AGEB_PDF)
     ger_row = pd.DataFrame(
-        [[ger["Industry"], ger["Transport"], ger["Residential"], ger["Services_Other"], ger["FEC"], 1, 0, 0]],
+        [[ger["Industry"], ger["Transport"], ger["Residential"], ger["Services_Other"], ger["FEC"],
+          *([1] + [0] * (len(FLAGS) - 1))]],
         index=pd.MultiIndex.from_tuples([("276", 1990)], names=out.index.names),
         columns=out.columns,
     )
@@ -165,9 +166,25 @@ def main() -> int:
         out.loc[("586", yr), "flag_fec_recomputed"] = 1
 
     # --- Decision 3: Pakistan 2017-2022 transport reported nil ("-") -> 0 ---
+    # SBP Table 2.3 records traction as "-" (nil) for FY 2017-18 .. 2019-20, and
+    # the Pakistan Railways yearbooks record electric energy = Nil for FY 2020-21
+    # .. 2022-23 (electric-locomotive service suspended). 0 continues UNdata's own
+    # 2012-2016 convention.
     for yr in range(2017, 2023):
         out.loc[("586", yr), "Transport"] = 0.0
         out.loc[("586", yr), "flag_reported_nil"] = 1
+
+    # --- Decision 4: Indonesia transport 2000-2007 + 2016 (ESDM HEESI fills) ---
+    # UNdata matches HEESI exactly for 2008-2014, so UNdata's Indonesian transport
+    # series IS the HEESI Table 5.4.1 series. The pre-2008 gap (2000-2007) and the
+    # 2016 gap are filled from HEESI 2012/2018 (final consumption, same concept as
+    # B40_122). 1990-1999 remain missing: no HEESI edition covers them.
+    idn_transport = {2000: 0.044, 2001: 0.049, 2002: 0.053, 2003: 0.053,
+                     2004: 0.055, 2005: 0.055, 2006: 0.067, 2007: 0.085,
+                     2016: 0.223}
+    for yr, val in idn_transport.items():
+        out.loc[("360", yr), "Transport"] = val
+        out.loc[("360", yr), "flag_indonesia_heesi"] = 1
 
     out = out.sort_index().reset_index()
     out = out.rename(columns={"REF_AREA": "code", "TIME_PERIOD": "year"})
@@ -195,12 +212,15 @@ def main() -> int:
     china = out[(out["code"] == "156") & (out["year"] == 2022)].iloc[0]
     ger90 = out[(out["code"] == "276") & (out["year"] == 1990)].iloc[0]
     pk = {y: out[(out["code"] == "586") & (out["year"] == y)].iloc[0] for y in (1990, 1991, 1992, 1993)}
+    idn = out[(out["code"] == "360") & (out["year"].isin([2000, 2007, 2016]))]
 
     print(f"countries={n_countries}  years={out['year'].min()}-{out['year'].max()}  rows={len(out)}")
     print(f"China 2022 FEC={china['FEC']:.1f} TWh  Industry={china['Industry']:.1f}")
     print(f"Germany 1990: Industry={ger90['Industry']} Services={ger90['Services_Other']} "
           f"FEC={ger90['FEC']:.2f} flag={ger90['flag_germany_linked']}")
     print(f"Pakistan FEC 1990-93: " + ", ".join(f"{y}={pk[y]['FEC']:.2f}" for y in (1990, 1991, 1992, 1993)))
+    print(f"Indonesia transport fills: " + ", ".join(
+        f"{int(r['year'])}={r['Transport']}" for _, r in idn.iterrows()))
     print(f"wrote {OUT_COUNTRY_YEAR.name} ({OUT_COUNTRY_YEAR.stat().st_size} bytes), "
           f"{OUT_REGION_YEAR.name} ({OUT_REGION_YEAR.stat().st_size} bytes)")
     return 0

@@ -182,7 +182,28 @@ convention; (ii) `FEC − (Industry + Residential + Services_Other)` is 0.00 ±
 0.01 TWh in each of those six years, so the total is fully explained by the
 other three sectors; (iii) the historical transport maximum (0.038 TWh) is
 ~0.03% of national consumption, so the impact is negligible. FEC is unchanged.
+The 2020–2022 value is now sourced, not assumed: the Pakistan Railways
+*Yearbook 2023-24* (Ministry of Railways) "Fuel consumption" table records
+electric energy = Nil for FY 2020-21, 2021-22 and 2022-23, and states that
+electric-locomotive service is suspended (nil electric locomotives).
 Any other missing value is **never** treated as 0.
+
+### 4. Indonesia 2000–2007 and 2016 — transport filled from HEESI
+
+`360` (Indonesia) is missing `B40_122` (transport) for 1990–2007 and 2016.
+UNdata's Indonesian transport series matches the Ministry of Energy and Mineral
+Resources (ESDM) *Handbook of Energy & Economic Statistics of Indonesia* (HEESI)
+Table 5.4.1 **exactly** for 2008–2014, so UNdata's series *is* HEESI. The
+pre-2008 gap (2000–2007) and 2016 are therefore filled from HEESI 2012 / 2018
+(final energy consumption of the transport sector, the same concept as
+`B40_122`), in TWh:
+
+* 2000–2007: 0.044, 0.049, 0.053, 0.053, 0.055, 0.055, 0.067, 0.085
+* 2016: 0.223
+
+1990–1999 remain missing — no HEESI edition covers them. These values are
+~0.04–0.22 TWh (negligible against Indonesia's ~294 TWh) but make the transport
+series complete from 2000. `flag_indonesia_heesi = 1`.
 
 ---
 
@@ -259,11 +280,22 @@ counting. The script asserts the four codes are absent from
 * Fifteen former Soviet countries (Russia, Ukraine, Kazakhstan, …) have no data
   for 1990–91 and appear from 1992.
 * 21 areas (1990) and 15 areas (2022) do not report an industry row.
-* Pakistan 2017–2022 transport is set to 0 by convention (reported nil), not
-  because there is no transport electricity.
-* Saudi Arabia reports no separate transport classification in UNdata.
-* Indonesia is missing from the early 1990s.
-* Malaysia and Bangladesh were not individually audited.
+* Pakistan 2017–2022 transport is set to 0 (reported nil): SBP Table 2.3 records
+  traction "–" for FY 2017-18..2019-20 and the Pakistan Railways yearbook records
+  electric energy = Nil for FY 2020-21..2022-23. Pakistan 2019-20's *other* SBP
+  components do not reconcile to that row's total, but the traction cell is
+  unambiguously nil and the Railways yearbook independently confirms nil electric
+  energy for that year.
+* Saudi Arabia reports no separate transport classification in UNdata (Riyadh
+  Metro opened only in late 2024, outside the window).
+* Indonesia transport 1990–1999 remains missing (no HEESI edition covers it);
+  2000–2007 and 2016 are filled from HEESI.
+* Malaysia transport 1990–1996 remains missing: NEB 2012 reports transport "–"
+  (not collected) before 2006; KTM Komuter (Aug 1995) and STAR LRT (Dec 1996)
+  imply small but unquantified values.
+* Bangladesh transport 1990–2021 is nil in practice (Bangladesh Railway is
+  diesel-hauled; the first electric urban rail, Dhaka MRT Line-6, opened
+  28 Dec 2022) but no numeric national source exists, so it is left missing.
 * `ESTIMATE=Y` values are retained and the flag is preserved in the raw CSV.
 * The original IEA source files cannot be redistributed; only the UN-derived
   aggregates are committed.
@@ -280,6 +312,7 @@ counting. The script asserts the four codes are absent from
 | `build_energy_dataset.py` | `un_all.xml` | `electricity_consumption_1990_2023.csv` |
 | `build_mappings.py` | `UN_CL_AREA_codelist.xml`, geojson | `natural_earth_index.csv`, `country_region.csv` |
 | `build_analysis_tables.py` | cleaned CSV, `country_region.csv`, AGEB PDF | `analysis_country_year.csv`, `analysis_region_year.csv` |
+| `build_supplementary_sources.py` | cleaned CSV, `UN_CL_AREA_codelist.xml` | `undata_sector_gap_table_1990_2022.csv`, `supplementary_source_register.csv` |
 | `validate_dataset.py` | analysis tables, OWID, World Bank | `validation_jumps.csv`, `validation_crosscheck.csv` |
 | `make_figures.py` | analysis tables, geojson, OWID | `Figures/output_*.png`, `output_6_7_slider.html` |
 | `make_dashboard.py` | figures, PNGs | `web/index.html`, `web/method.html` |
@@ -291,10 +324,12 @@ counting. The script asserts the four codes are absent from
 | `electricity_consumption_1990_2023.csv` | 36,247 | `REF_AREA, TIME_PERIOD, TRANSACTION, OBS_VALUE, ESTIMATE, UNIT` (TJ) |
 | `country_region.csv` | 218 | `code, area, iso2, subregion_code, subregion, region, iso3, admin, matched` |
 | `natural_earth_index.csv` | 242 | `UN_A3, ISO_A3, ISO_A2, ADMIN, NAME` |
-| `analysis_country_year.csv` | 6,932 | `code, area, iso2, iso3, admin, region, subregion, year, Industry, Transport, Residential, Services_Other, FEC, flag_germany_linked, flag_fec_recomputed, flag_reported_nil` (TWh) |
+| `analysis_country_year.csv` | 6,932 | `code, area, iso2, iso3, admin, region, subregion, year, Industry, Transport, Residential, Services_Other, FEC, flag_germany_linked, flag_fec_recomputed, flag_reported_nil, flag_indonesia_heesi` (TWh) |
 | `analysis_region_year.csv` | 198 | `region, year, Industry, Transport, Residential, Services_Other, FEC` (TWh) |
 | `validation_crosscheck.csv` | 201 | `country, year, un_fec_twh, owid_demand_twh, ratio, status, reason` |
 | `validation_jumps.csv` | 41 | `code, area, year, prev_year, prev_fec_twh, fec_twh, change_pct` |
+| `undata_sector_gap_table_1990_2022.csv` | 218 | `code, area, FEC_2022_TWh, Industry, Transport, Residential, Services/Other, share_%, cum_%, any_gap` |
+| `supplementary_source_register.csv` | 12 | `country, gap, source, decision, reason / caveat, licence, source_url` |
 
 ---
 

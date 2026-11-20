@@ -49,6 +49,7 @@ python team03/download_undata.py
 python team03/build_energy_dataset.py
 python team03/build_mappings.py
 python team03/build_analysis_tables.py
+python team03/build_supplementary_sources.py
 python team03/validate_dataset.py
 python team03/make_figures.py
 python team03/make_dashboard.py
@@ -102,7 +103,7 @@ python team03/make_dashboard.py
   Natural Earth quirks: Norway `UN_A3=-99`, France `ISO_A3/ISO_A2=-99` (only `UN_A3` is
   reliable). That is why the choropleth keys on `UN_A3`, not ISO codes.
 
-## 5. The three data decisions (each with a 0/1 flag column)
+## 5. The four data decisions (each with a 0/1 flag column)
 
 ### Decision 1 — Germany 1990 (linked split)
 
@@ -137,6 +138,17 @@ recomputing FEC would break "sector sum = FEC" by 55–57%. flag `flag_fec_recom
 `B40_122` (transport) is "–" for 2017–2022 → set to **0.0**, flag `flag_reported_nil = 1`.
 Evidence: transport is already 0.0 in 2014–16; `FEC − (other 3 sectors) = 0.00 ± 0.01`
 each year; historical transport max (0.038 TWh) is ~0.03% of consumption. FEC unchanged.
+The 2020–2022 value is now **sourced**, not assumed: Pakistan Railways *Yearbook 2023-24*
+"Fuel consumption" table records electric energy = Nil for FY 2020-21/21-22/22-23
+(electric-locomotive service suspended, nil electric locomotives).
+
+### Decision 4 — Indonesia 2000–2007 + 2016 (HEESI transport fills)
+
+`360` (Indonesia) is missing `B40_122` for 1990–2007 and 2016. UNdata's Indonesian
+transport matches ESDM HEESI Table 5.4.1 **exactly** for 2008–2014, so UNdata's series
+*is* HEESI. Fill 2000–2007 (0.044/0.049/0.053/0.053/0.055/0.055/0.067/0.085 TWh) and
+2016 (0.223 TWh) from HEESI 2012/2018; 1990–1999 stay missing (no HEESI edition covers
+them). `flag_indonesia_heesi = 1`.
 
 ## 6. Validation results (the numbers that matter)
 
@@ -169,13 +181,14 @@ Choropleths: Viridis scale, `range_color=[-1, 4]` on `log10(FEC)`, keyed on `UN_
 
 ## 8. Files: committed vs ignored
 
-Committed (in git): `team03/` (7 `.py` + `DATA_PIPELINE.md` + this file),
+Committed (in git): `team03/` (8 `.py` + `DATA_PIPELINE.md` + this file),
 `web/index.html` (18.5 MB self-contained), `web/method.html`,
-`Figures/` (9 PNG + `output_6_7_slider.html`), and these 7 CSVs in `Datasets/`:
+`Figures/` (11 PNG + `output_6_7_slider.html`), and these 9 CSVs in `Datasets/`:
 
 `electricity_consumption_1990_2023.csv`, `country_region.csv`, `natural_earth_index.csv`,
 `analysis_country_year.csv`, `analysis_region_year.csv`, `validation_crosscheck.csv`,
-`validation_jumps.csv`.
+`validation_jumps.csv`, `undata_sector_gap_table_1990_2022.csv`,
+`supplementary_source_register.csv`.
 
 Gitignored (raw / re-downloadable): `Datasets/*.xml`, `Datasets/*.geojson`,
 `Datasets/*.pdf`, `Datasets/owid_*.csv`, `Datasets/worldbank_population.json`.
@@ -185,7 +198,7 @@ Gitignored (raw / re-downloadable): `Datasets/*.xml`, `Datasets/*.geojson`,
 - `electricity_consumption_1990_2023.csv`: `REF_AREA, TIME_PERIOD, TRANSACTION, OBS_VALUE, ESTIMATE, UNIT`
   (this is Kelden's notebook contract — the notebook runs unchanged against it).
 - `analysis_country_year.csv` (6,932 rows):
-  `code, area, iso2, iso3, admin, region, subregion, year, Industry, Transport, Residential, Services_Other, FEC, flag_germany_linked, flag_fec_recomputed, flag_reported_nil`
+  `code, area, iso2, iso3, admin, region, subregion, year, Industry, Transport, Residential, Services_Other, FEC, flag_germany_linked, flag_fec_recomputed, flag_reported_nil, flag_indonesia_heesi`
 - `country_region.csv` (218 rows):
   `code, area, iso2, subregion_code, subregion, region, iso3, admin, matched`
 - `validation_crosscheck.csv`: `country, year, un_fec_twh, owid_demand_twh, ratio, status, reason` (`status` ∈ {ok, flag})

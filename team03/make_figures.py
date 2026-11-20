@@ -1,4 +1,4 @@
-"""Generate the eight proposal figures (PNG + interactive HTML).
+"""Generate the proposal and answer figures (PNG + interactive HTML).
 
 Step 6 of the Team 03 data pipeline.
 
@@ -31,6 +31,8 @@ COUNTRY_YEAR = DATASETS / "analysis_country_year.csv"
 REGION_YEAR = DATASETS / "analysis_region_year.csv"
 GEOJSON = DATASETS / "ne_50m_admin_0_countries.geojson"
 PROD_SOURCE = DATASETS / "owid_electricity_prod_source.csv"
+POP_JSON = DATASETS / "worldbank_population.json"
+GDP_JSON = DATASETS / "worldbank_gdp_ppp.json"
 
 SECTORS = ["Industry", "Transport", "Residential", "Services_Other"]
 COMBINED_TO_MAIN = {"251": "250", "382": "380", "579": "578", "757": "756"}
@@ -240,6 +242,116 @@ def fig_generation_mix() -> go.Figure:
     return fig
 
 
+# --------------------------------------------------------------------------- #
+# Output 10: drivers of consumption change (Kaya decomposition, 2000 -> 2022)
+# --------------------------------------------------------------------------- #
+DRIVER_COUNTRIES = [
+    # (label, code, iso3). France (251) has no iso3 in country_region (Natural
+    # Earth France ISO_A3=-99), so it is carried explicitly.
+    ("China", "156", "CHN"), ("United States", "840", "USA"), ("India", "356", "IND"),
+    ("Japan", "392", "JPN"), ("Russia", "643", "RUS"), ("Brazil", "076", "BRA"),
+    ("South Korea", "410", "KOR"), ("Canada", "124", "CAN"), ("Germany", "276", "DEU"),
+    ("France", "251", "FRA"), ("Indonesia", "360", "IDN"),
+]
+
+
+def _wb_series(path: Path) -> dict[tuple[str, int], float]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    out: dict[tuple[str, int], float] = {}
+    for row in data[1]:
+        iso3 = row.get("countryiso3code")
+        val = row.get("value")
+        yr = row.get("date")
+        if iso3 and val is not None and yr:
+            out[(iso3, int(yr))] = float(val)
+    return out
+
+
+def drivers_decomposition_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Kaya decomposition table (log-growth percentage points, 2000 -> 2022)."""
+    pop = _wb_series(POP_JSON)
+    gdp = _wb_series(GDP_JSON)
+
+    rows = []
+    for label, code, iso3 in DRIVER_COUNTRIES:
+        e = df[(df["code"] == code) & (df["year"].isin([2000, 2022]))].set_index("year")["FEC"]
+        p00, p22 = pop.get((iso3, 2000)), pop.get((iso3, 2022))
+        g00, g22 = gdp.get((iso3, 2000)), gdp.get((iso3, 2022))
+        if None in (p00, p22, g00, g22) or 2000 not in e.index or 2022 not in e.index:
+            continue
+        ge = np.log(e[2022] / e[2000]) * 100
+        gp = np.log(p22 / p00) * 100
+        gy = np.log((g22 / p22) / (g00 / p00)) * 100
+        gi = np.log((e[2022] / g22) / (e[2000] / g00)) * 100
+        rows.append({"country": label, "population_pp": round(gp, 1),
+                     "income_per_person_pp": round(gy, 1), "e_gdp_pp": round(gi, 1),
+                     "total_growth_pp": round(ge, 1)})
+    return pd.DataFrame(rows).sort_values("total_growth_pp")
+
+
+def fig_drivers_decomposition(df: pd.DataFrame) -> go.Figure:
+    """Log-growth Kaya decomposition E = P x (GDP/P) x (E/GDP), 2000 -> 2022.
+
+    Each component is additive in log growth, so the three stacked bars sum
+    exactly to the total electricity-growth rate (barmode='relative' renders the
+    usually-negative efficiency term E/GDP below the axis).
+    """
+    tab = drivers_decomposition_data(df)
+    d = tab.rename(columns={"population_pp": "Population",
+                            "income_per_person_pp": "Income per person",
+                            "e_gdp_pp": "Efficiency (E/GDP)",
+                            "total_growth_pp": "Total electricity growth"})
+
+    fig = go.Figure()
+    comps = ["Population", "Income per person", "Efficiency (E/GDP)"]
+    colors = ["#66c2a5", "#fc8d62", "#8da0cb"]
+    for comp, color in zip(comps, colors):
+        fig.add_trace(go.Bar(
+            y=d["country"], x=d[comp], name=comp, orientation="h",
+            marker_color=color, hovertemplate="%{y}: %{x:.1f} pp<extra>" + comp + "</extra>",
+        ))
+    fig.add_trace(go.Scatter(
+        y=d["country"], x=d["Total electricity growth"], mode="markers", name="Total (E)",
+        marker=dict(color="#1a1a2e", size=7, symbol="diamond"),
+        hovertemplate="%{y}: %{x:.1f} pp<extra>total</extra>",
+    ))
+    fig.update_layout(
+        title="What accounts for electricity-consumption growth, 2000 → 2022",
+        barmode="relative",
+        xaxis_title="Log growth, percentage points (population + income/person + E/GDP = total)",
+        yaxis_title="",
+        template="plotly_white",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+    )
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Output 11: generation mix by region, 2022 (OWID continent definitions)
+# --------------------------------------------------------------------------- #
+def fig_generation_mix_regions() -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    srcs = ["Other renewables", "Bioenergy", "Solar", "Wind", "Hydropower",
+            "Nuclear", "Gas", "Oil", "Coal"]
+    regions = ["Africa", "Asia", "Europe", "North America", "South America", "Oceania"]
+
+    rows = []
+    for region in regions:
+        r = ow[ow["Entity"] == region]
+        for s in srcs:
+            rows.append({"region": region, "source": s, "twh": float(r[r["Year"] == 2022][s].sum())})
+    d = pd.DataFrame(rows)
+    d["share"] = d["twh"] / d.groupby("region")["twh"].transform("sum") * 100
+
+    fig = px.bar(d, x="share", y="region", color="source",
+                 title="Electricity generation mix by region, 2022 (generation, not consumption)",
+                 labels={"share": "Share of generation (%)", "region": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set1,
+                 category_orders={"region": list(reversed(regions))})
+    fig.update_layout(template="plotly_white", barmode="stack", xaxis_ticksuffix="%")
+    return fig
+
+
 def main() -> int:
     df = load_country_year()
     reg = load_region_year()
@@ -253,6 +365,8 @@ def main() -> int:
         "output_6_map_1990.png": fig_map_1990(df),
         "output_7_map_2022.png": fig_map_2022(df),
         "output_8_generation_mix.png": fig_generation_mix(),
+        "output_10_drivers_decomposition.png": fig_drivers_decomposition(df),
+        "output_11_generation_mix_regions.png": fig_generation_mix_regions(),
     }
 
     FIGURES.mkdir(parents=True, exist_ok=True)

@@ -128,6 +128,20 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
             mix_rows.append({"year": yr, "source": s, "share_pct": round(100 * w[s] / w.sum(), 2)})
     mix = pd.DataFrame(mix_rows)
 
+    drivers = mf.drivers_decomposition_data(df)
+
+    regions = ["Africa", "Asia", "Europe", "North America", "South America", "Oceania"]
+    srcs = ["Other renewables", "Bioenergy", "Solar", "Wind", "Hydropower",
+            "Nuclear", "Gas", "Oil", "Coal"]
+    reg_mix_rows = []
+    for region in regions:
+        r = ow[ow["Entity"] == region]
+        for s in srcs:
+            reg_mix_rows.append({"region": region, "source": s,
+                                 "share_pct": round(100 * float(r[r["Year"] == 2022][s].sum())
+                                                    / float(r[r["Year"] == 2022][srcs].sum().sum()), 2)})
+    reg_mix = pd.DataFrame(reg_mix_rows)
+
     return {
         1: world.merge(fixed_s, on="year"),
         2: top10,
@@ -138,6 +152,8 @@ def _fig_csvs(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, pd.DataFrame]:
         7: map22,
         8: mix,
         9: df[["code", "area", "year", "FEC"]].rename(columns={"FEC": "fec_twh"}),
+        10: drivers,
+        11: reg_mix,
     }
 
 
@@ -164,6 +180,13 @@ def _captions() -> dict[int, str]:
            "final consumption, and is shown only as background context.",
         9: "Animated world map, 1990-2022. Use the slider or the play button to scrub "
            "through every year.",
+        10: "Kaya decomposition of final-consumption growth, 2000-2022: E = P x (GDP/P) "
+            "x (E/GDP). Population, income-per-person and electricity-per-GDP are "
+            "additive in log growth, so the three bars sum exactly to total growth. "
+            "Associations only - observational data, no causal claim.",
+        11: "Electricity generation mix by OWID continent, 2022. Generation, not final "
+            "consumption, shown for background; the project's own region column merges "
+            "North and South America into one 'Americas' continent.",
     }
 
 
@@ -178,6 +201,8 @@ def _figures(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, object]:
         7: mf.make_map_figure(2022, df),
         8: mf.fig_generation_mix(),
         9: mf.fig_map_slider(df),
+        10: mf.fig_drivers_decomposition(df),
+        11: mf.fig_generation_mix_regions(),
     }
 
 
@@ -191,6 +216,8 @@ _PNG_NAMES = {
     7: "output_7_map_2022.png",
     8: "output_8_generation_mix.png",
     9: "output_9_map_slider.png",
+    10: "output_10_drivers_decomposition.png",
+    11: "output_11_generation_mix_regions.png",
 }
 
 _TITLES = {
@@ -203,6 +230,8 @@ _TITLES = {
     7: "Output 7 — World map, 2022",
     8: "Output 8 — Generation mix (background)",
     9: "Output 6-7 — Animated world map (1990-2022)",
+    10: "Answer B — Drivers of consumption change",
+    11: "Answer A — Generation mix by region (2022)",
 }
 
 
@@ -242,8 +271,8 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
         parts.append(f'<div class="kf"><div class="num">{num}</div><div class="lbl">{lbl}</div></div>\n')
     parts.append("</section>\n")
 
-    parts.append("<section id=\"outputs\">\n<h2>The eight outputs</h2>\n")
-    for n in range(1, 10):
+    parts.append("<section id=\"outputs\">\n<h2>The outputs</h2>\n")
+    for n in range(1, 12):
         png_uri = _png_to_uri(_PNG_NAMES[n])
         csv_uri = _csv_to_uri(csvs[n])
         if n == 1:
@@ -270,8 +299,9 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
          "TRANSACTION, OBS_VALUE, ESTIMATE, UNIT); the parent aggregate B47_123 is never added."),
         ("Map", "CL_AREA gives each area a name, ISO alpha-2 code and subregion; a static "
          "table maps subregion to continent; the Natural Earth ne_50m UN_A3 link attaches polygons."),
-        ("Decide", "Three documented decisions: Germany 1990 (linked estimate, Industry 229.9), "
-         "Pakistan 1990-92 (recompute FEC to 28.75/31.50/33.89) and Pakistan 2017-22 transport = 0."),
+        ("Decide", "Four documented decisions: Germany 1990 (linked estimate, Industry 229.9), "
+         "Pakistan 1990-92 (recompute FEC to 28.75/31.50/33.89), Pakistan 2017-22 transport = 0 "
+         "(reported nil), and Indonesia transport 2000-07 + 2016 (ESDM HEESI fills)."),
         ("Validate", "Four validation layers: internal consistency, an OWID demand cross-check, "
          "Kelden's headline numbers, and a duplicate-count check."),
         ("Trend", "The global rise is drawn as two lines so the ex-Soviet coverage effect is visible."),
@@ -304,6 +334,7 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
         ("flag_germany_linked", "1 = Germany 1990 sector split is a linked AGEB estimate."),
         ("flag_fec_recomputed", "1 = Pakistan 1990-92 FEC was recomputed (industry added)."),
         ("flag_reported_nil", "1 = Pakistan 2017-22 transport recorded as reported nil (0)."),
+        ("flag_indonesia_heesi", "1 = Indonesia transport 2000-07 + 2016 filled from ESDM HEESI."),
     ]
     parts.append("<tr><th>Column</th><th>Meaning</th></tr>\n")
     for col, desc in dd:
@@ -316,8 +347,9 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
         ("team03/build_energy_dataset.py", "Step 2: parse XML into the cleaned CSV."),
         ("team03/build_mappings.py", "Step 3: region/ISO/map mapping tables."),
         ("team03/build_analysis_tables.py", "Step 4: country x year and region x year tables."),
+        ("team03/build_supplementary_sources.py", "Step 4.5: gap table + source register."),
         ("team03/validate_dataset.py", "Step 5: four-layer validation."),
-        ("team03/make_figures.py", "Step 6: the eight figures."),
+        ("team03/make_figures.py", "Step 6: the figures (1-8 proposal + 10-11 answer charts)."),
         ("team03/make_dashboard.py", "Step 7: this dashboard."),
         ("team03/DATA_PIPELINE.md", "Full written method (see Method page)."),
         ("Figures/output_6_7_slider.html", "Self-contained 1990-2022 map slider."),
@@ -399,6 +431,30 @@ def _method_sections() -> list[dict]:
                  "fig = px.bar(..., barmode='stack')",
          "spec": "100% stacked bar, 2000 vs 2022, stacked by generation source. Caption "
                  "states this is generation, not consumption, shown only as background."},
+        {"id": "o10", "title": "Answer B — Drivers of consumption change",
+         "input": "analysis_country_year.csv (FEC), World Bank SP.POP.TOTL, "
+                  "NY.GDP.MKTP.PP.KD, for eleven large consumers.",
+         "trans": "Kaya identity E = P x (GDP/P) x (E/GDP). Take log growth over "
+                  "2000-2022 so the three components are exactly additive in "
+                  "percentage points; render with barmode='relative' so the usually "
+                  "negative E/GDP term stacks below the axis.",
+         "code": "ge = log(E22/E00)*100; gp = log(P22/P00)*100\n"
+                 "gy = log((GDP22/P22)/(GDP00/P00))*100\n"
+                 "gi = log((E22/GDP22)/(E00/GDP00))*100  # ge = gp + gy + gi",
+         "spec": "Horizontal stacked bars (Population, Income/person, E/GDP) summing to "
+                 "total growth, with a diamond marker for total E. Caption states this is "
+                 "observational and associative, not causal."},
+        {"id": "o11", "title": "Answer A — Generation mix by region",
+         "input": "OWID electricity-prod-source-stacked.csv, continent entities.",
+         "trans": "For each OWID continent (Africa, Asia, Europe, North America, South "
+                  "America, Oceania), sum the nine fuel columns for 2022, normalise to "
+                  "100%, stack by fuel.",
+         "code": "r = ow[ow.Entity == region]\n"
+                 "share = 100 * r[r.Year == 2022][srcs].sum() / r[r.Year == 2022][srcs].sum().sum()\n"
+                 "fig = px.bar(..., barmode='stack')",
+         "spec": "100% stacked horizontal bar per continent, stacked by generation fuel. "
+                 "Generation, not consumption; the project's own region column merges the "
+                 "two Americas into one continent."},
     ]
 
 
@@ -411,7 +467,7 @@ def build_method_html() -> str:
                  '<a href="index.html#files">Files</a></nav>\n')
 
     parts.append("<header><h1>Method — how the data becomes the charts</h1>"
-                 "<p class=\"subtitle\">From raw UN SDMX XML to eight outputs</p></header>\n")
+                 "<p class=\"subtitle\">From raw UN SDMX XML to eleven outputs</p></header>\n")
 
     parts.append("<section id=\"overview\">\n<h2>Overview</h2>\n<pre>"
                  "un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)\n"
@@ -421,7 +477,7 @@ def build_method_html() -> str:
                  "                                                          │\n"
                  "                                              analysis_region_year.csv\n"
                  "                                                          │\n"
-                 "                                   eight figures + this dashboard</pre>\n"
+                 "                                   eleven figures + this dashboard</pre>\n"
                  "<p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, "
                  "<code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, "
                  "<code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, "
@@ -475,6 +531,7 @@ def build_method_html() -> str:
                  "python team03/build_energy_dataset.py\n"
                  "python team03/build_mappings.py\n"
                  "python team03/build_analysis_tables.py\n"
+                 "python team03/build_supplementary_sources.py\n"
                  "python team03/validate_dataset.py\n"
                  "python team03/make_figures.py\n"
                  "python team03/make_dashboard.py</pre>\n"

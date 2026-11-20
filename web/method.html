@@ -40,7 +40,7 @@ ul { padding-left:22px; }
 </head>
 <body>
 <nav><a href="index.html">Outputs</a><a href="#overview">Method</a><a href="index.html#data-dictionary">Data dictionary</a><a href="index.html#files">Files</a></nav>
-<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to eight outputs</p></header>
+<header><h1>Method — how the data becomes the charts</h1><p class="subtitle">From raw UN SDMX XML to eleven outputs</p></header>
 <section id="overview">
 <h2>Overview</h2>
 <pre>un_all.xml (UN SDMX) ──► electricity_consumption_1990_2023.csv (TJ)
@@ -50,7 +50,7 @@ ne_50m geojson ──────────┴─► country_region.csv ─►
                                                           │
                                               analysis_region_year.csv
                                                           │
-                                   eight figures + this dashboard</pre>
+                                   eleven figures + this dashboard</pre>
 <p>Intermediate files: <code>un_all.xml</code>, <code>UN_CL_AREA_codelist.xml</code>, <code>electricity_consumption_1990_2023.csv</code>, <code>country_region.csv</code>, <code>natural_earth_index.csv</code>, <code>analysis_country_year.csv</code>, <code>analysis_region_year.csv</code>.</p>
 </section>
 <section id="shared">
@@ -132,6 +132,24 @@ fig = px.choropleth(d, geojson=geojson, locations='map_code',
 fig = px.bar(..., barmode='stack')</code></pre>
 <h3>Chart specification</h3><p>100% stacked bar, 2000 vs 2022, stacked by generation source. Caption states this is generation, not consumption, shown only as background.</p>
 </section>
+<section id="o10">
+<h2>Answer B — Drivers of consumption change</h2>
+<h3>Input</h3><p>analysis_country_year.csv (FEC), World Bank SP.POP.TOTL, NY.GDP.MKTP.PP.KD, for eleven large consumers.</p>
+<h3>Transformation</h3><p>Kaya identity E = P x (GDP/P) x (E/GDP). Take log growth over 2000-2022 so the three components are exactly additive in percentage points; render with barmode='relative' so the usually negative E/GDP term stacks below the axis.</p>
+<h3>Code</h3><pre><code>ge = log(E22/E00)*100; gp = log(P22/P00)*100
+gy = log((GDP22/P22)/(GDP00/P00))*100
+gi = log((E22/GDP22)/(E00/GDP00))*100  # ge = gp + gy + gi</code></pre>
+<h3>Chart specification</h3><p>Horizontal stacked bars (Population, Income/person, E/GDP) summing to total growth, with a diamond marker for total E. Caption states this is observational and associative, not causal.</p>
+</section>
+<section id="o11">
+<h2>Answer A — Generation mix by region</h2>
+<h3>Input</h3><p>OWID electricity-prod-source-stacked.csv, continent entities.</p>
+<h3>Transformation</h3><p>For each OWID continent (Africa, Asia, Europe, North America, South America, Oceania), sum the nine fuel columns for 2022, normalise to 100%, stack by fuel.</p>
+<h3>Code</h3><pre><code>r = ow[ow.Entity == region]
+share = 100 * r[r.Year == 2022][srcs].sum() / r[r.Year == 2022][srcs].sum().sum()
+fig = px.bar(..., barmode='stack')</code></pre>
+<h3>Chart specification</h3><p>100% stacked horizontal bar per continent, stacked by generation fuel. Generation, not consumption; the project's own region column merges the two Americas into one continent.</p>
+</section>
 <section id="validation">
 <h2>Validation trace</h2>
 <ul>
@@ -148,6 +166,7 @@ fig = px.bar(..., barmode='stack')</code></pre>
 python team03/build_energy_dataset.py
 python team03/build_mappings.py
 python team03/build_analysis_tables.py
+python team03/build_supplementary_sources.py
 python team03/validate_dataset.py
 python team03/make_figures.py
 python team03/make_dashboard.py</pre>
