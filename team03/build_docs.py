@@ -102,6 +102,46 @@ def build_answers_docx() -> None:
           "World Bank population/GDP, cross-referenced against the UN final-consumption "
           "pipeline. All figures are in Figures/ and reproduced in this document.")
 
+    _h(d, "The questions", level=1)
+    _p(d, "A. Fuel by fuel generation mix: how is the electricity produced?", bold=True)
+    _bullet(d, "OWID has electricity generated from coal, gas, oil, nuclear, hydro, solar, wind, "
+              "biofuel and other renewables, as amounts and as shares of generation, plus the "
+              "carbon intensity of electricity. Units and years for these columns still need "
+              "confirming in the codebook.")
+    _bullet(d, "Compare each fuel's share for the world, the regions and the largest countries in "
+              "2000 and 2022, and how fast each fuel grew.")
+    _bullet(d, "Generation is not consumption. It includes losses and trade, so it stays out of the "
+              "sector shares, and we would show the two side by side and say so.")
+    _bullet(d, "The IEA file may offer a longer series through its electricity output rows. We have "
+              "not checked whether those rows split by fuel in the free file.")
+    _p(d, "B. Why did consumption change? Associations, not proof of causes", bold=True)
+    _bullet(d, "This data cannot prove causes. It has no prices, policies, technology costs or "
+              "weather, and it is observational, so we can describe patterns but not show that one "
+              "thing caused another.")
+    _bullet(d, "What we can do is relate consumption to population and income. OWID has both for the "
+              "eleven large countries we checked, including China, the United States, India, Russia "
+              "and Japan. GDP is missing for 55 of 220 countries and territories in 2022, mostly "
+              "small islands, and it is measured in international dollars at 2011 prices, ending in 2022.")
+    _bullet(d, "A decomposition splits growth in electricity use into three arithmetic parts: "
+              "population growth, income per person, and electricity used per unit of GDP. It "
+              "describes what accounts for the change, and it does not say why each part moved.")
+    _bullet(d, "Results are reported as consistent with an explanation, never as proof, and we list "
+              "the data a real test would need, such as electricity prices and electrification policies.")
+    _bullet(d, "The group should decide whether to do the decomposition, or only the simpler "
+              "comparison of consumption growth against population and GDP growth.")
+
+    _h(d, "Summary", level=1)
+    _p(d, "A — The world still runs mostly on coal + gas (58% of generation in 2022), but the "
+          "fastest growth is wind and solar (≈0.2% → ≈12%). China and India are coal-led; "
+          "Europe and North America swapped coal for gas + wind/solar; Brazil, Canada and France "
+          "are hydro/nuclear-based and low-carbon. Generation (28,918 TWh) is not consumption "
+          "(24,936 TWh): the ~14% gap is losses, own-use and trade.")
+    _p(d, "B — The Kaya decomposition (E = P × GDP/P × E/GDP) shows income-per-person and "
+          "electricity-per-GDP dominate consumption growth, while population is the smallest "
+          "component. China/India/Indonesia grew via income + electrification; the US, Europe and "
+          "Japan grew little or fell because efficiency (E/GDP) cancelled income growth. These are "
+          "associations, not proof of causes.")
+
     # ---- A -----------------------------------------------------------------
     _h(d, "A. Fuel-by-fuel generation mix — how is electricity produced?", level=1)
 
@@ -348,6 +388,31 @@ def build_technical_docx() -> None:
          caption="Context — global trend; the Germany-1990 decision moves only the 1990 point.")
     _fig(d, "output_4_sector_structure.png", width_in=6.0,
          caption="Context — sector structure; the missing-Industry areas are 0.03% of world FEC.")
+
+    _h(d, "References", level=1)
+    refs = [
+        "UNSD SDMX dataflow — https://data.un.org/WS/rest/dataflow/UNSD/DF_UNData_EnergyBalance/latest",
+        "UNSD data query (B07_EL, seven transactions) — https://data.un.org/WS/rest/data/UNSD,DF_UNData_EnergyBalance,1.0/.B07_EL.B25_FEC+B26_121+B40_122+B50_1231+B48_1232+B49_1235+B51_1234.HSO?startPeriod=1990&endPeriod=2023",
+        "UN CL_AREA code list — https://data.un.org/WS/rest/codelist/UNSD/CL_AREA/1.0",
+        "OWID electricity demand — https://ourworldindata.org/grapher/electricity-demand.csv",
+        "OWID electricity production by source — https://ourworldindata.org/grapher/electricity-prod-source-stacked.csv",
+        "OWID carbon intensity of electricity — https://ourworldindata.org/grapher/carbon-intensity-electricity.csv",
+        "Natural Earth 50m countries — https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson",
+        "World Bank population (SP.POP.TOTL) — https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=30000&date=1990:2022",
+        "World Bank GDP PPP (NY.GDP.MKTP.PP.KD) — https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.PP.KD?format=json&per_page=30000&date=1990:2022",
+        "AGEB (Germany 1990, EBD24e) — https://ag-energiebilanzen.de/wp-content/uploads/EBD24e_Auswertungstabellen_english.pdf",
+        "State Bank of Pakistan Handbook, Table 2.3 — https://archive.sbp.org.pk/departments/stats/pakEconomy_HandBook/Chap-2.3.pdf",
+        "NEPRA State of Industry Report 2021 — https://www.nepra.org.pk/publications/State%20of%20Industry%20Reports/State%20of%20Industry%20Report%202021.pdf",
+        "Pakistan Railways Yearbook 2023-24 (electric energy = Nil) — http://pakrail.gov.pk/images/yearbook/yearbook2023_24.pdf",
+        "ESDM HEESI 2012 — https://www.esdm.go.id/assets/media/content/content-handbook-of-energy-economic-statistics-of-indonesia-2012-dcexnjb.pdf",
+        "ESDM HEESI 2018 final — https://www.esdm.go.id/assets/media/content/content-handbook-of-energy-and-economic-statistics-of-indonesia-2018-final-edition.pdf",
+        "Malaysia NEB 2012 (archived) — https://web.archive.org/web/20220725103818/https://www.st.gov.my/en/contents/publications/statistics_electricity/National%20Energy%20Balance%202012.pdf",
+        "GASTAT use policy — https://stats.gov.sa/en/use-policy",
+        "Dhaka MRT Line-6 opening (Bangladesh) — https://www.bd.emb-japan.go.jp/itpr_en/11_000001_00654.html",
+        "GitHub repository — https://github.com/UNCHIKIT/CISC7204-GroupG-SemesterProject-Team03",
+    ]
+    for r in refs:
+        d.add_paragraph(r, style="List Number")
 
     DOCS.mkdir(parents=True, exist_ok=True)
     out = DOCS / "Data_Consistency_Technical_Findings.docx"

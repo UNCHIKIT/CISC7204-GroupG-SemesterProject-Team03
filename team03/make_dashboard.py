@@ -246,17 +246,17 @@ def _captions() -> dict[int, str]:
            "consumption). All values are terminal consumption, not generation.",
         3: "Final consumption aggregated to UN M49 continents (Africa, Americas, Asia, "
            "Europe, Oceania). Kosovo is assigned to Europe.",
-        4: "World sector split in 1990 vs 2022 (100% stacked). 21 areas (1990) and 15 "
-           "areas (2022) do not report an industry row; the sector sums still equal "
-           "the FEC total to within 1%.",
+        4: "World sector split, 1990-2022 (use the slider to scrub the year). 21 areas "
+           "(1990) and 15 areas (2022) do not report an industry row; the sector sums still "
+           "equal the FEC total to within 1%.",
         5: "Each country's share of world final consumption in 1990 versus 2022, using "
            "the same fixed sample of countries as the denominator in both years.",
         6: "Country-level final consumption, 1990 (Natural Earth 50m, UN_A3 link; "
            "214 of 218 areas have a matching polygon).",
         7: "Country-level final consumption, 2022 (Natural Earth 50m, UN_A3 link; "
            "214 of 218 areas have a matching polygon).",
-        8: "World electricity generation mix, 2000 vs 2022. This is generation, not "
-           "final consumption, and is shown only as background context.",
+        8: "World electricity generation mix, 2000-2022 (use the slider to scrub the year). "
+           "This is generation, not final consumption, shown only as background context.",
         9: "Animated world map, 1990-2022. Use the slider or the play button to scrub "
            "through every year.",
         10: "Kaya decomposition of final-consumption growth, 2000-2022: E = P x (GDP/P) "
@@ -268,8 +268,9 @@ def _captions() -> dict[int, str]:
             "North and South America into one 'Americas' continent.",
         12: "Generation mix by region animated across 2000-2022. Use the slider or "
             "play button to scrub the year; shares are % of each region's own generation.",
-        13: "Generation mix of the ten largest consumers, 2022. China and India are "
-            "coal-led; Brazil/Canada/France are hydro/nuclear-based.",
+        13: "Generation mix of the ten largest consumers, 2000-2022 (use the slider to "
+            "scrub the year). China and India are coal-led; Brazil/Canada/France are "
+            "hydro/nuclear-based.",
         14: "Carbon intensity of electricity, 2000-2022. World falls 527→490; Japan "
             "rises 424→520 after Fukushima; France stays ~80.",
         15: "World generation vs final consumption, 2022. The ~14% gap is "
@@ -292,16 +293,16 @@ def _figures(df: pd.DataFrame, reg: pd.DataFrame) -> dict[int, object]:
         1: mf.fig_global_trend(df),
         2: mf.fig_top10(df),
         3: mf.fig_regional(reg),
-        4: mf.fig_sector_structure(df),
+        4: mf.fig_sector_structure_slider(df),
         5: mf.fig_share_change(df),
         6: mf.make_map_figure(1990, df),
         7: mf.make_map_figure(2022, df),
-        8: mf.fig_generation_mix(),
+        8: mf.fig_generation_mix_slider(),
         9: mf.fig_map_slider(df),
         10: mf.fig_drivers_decomposition(df),
         11: mf.fig_generation_mix_regions(),
         12: mf.fig_generation_mix_regions_slider(),
-        13: mf.fig_generation_mix_countries(),
+        13: mf.fig_generation_mix_countries_slider(),
         14: mf.fig_carbon_intensity(),
         15: mf.fig_generation_vs_consumption(df),
         16: mf.fig_consumption_comparison(df),
@@ -335,16 +336,16 @@ _TITLES = {
     1: "Output 1 — Global trend, 1990-2022",
     2: "Output 2 — Top 10 consumers (2022)",
     3: "Output 3 — Regional trends",
-    4: "Output 4 — Sector structure, 1990 vs 2022",
+    4: "Output 4 — Sector structure, 1990-2022 (animated)",
     5: "Output 5 — Country share change",
     6: "Output 6 — World map, 1990",
     7: "Output 7 — World map, 2022",
-    8: "Output 8 — Generation mix (background)",
+    8: "Output 8 — Generation mix, 2000-2022 (animated)",
     9: "Output 6-7 — Animated world map (1990-2022)",
     10: "Drivers of consumption change",
     11: "Generation mix by region (2022)",
     12: "Generation mix by region (2000-2022, animated)",
-    13: "Generation mix, largest countries (2022)",
+    13: "Generation mix, largest countries (2000-2022, animated)",
     14: "Carbon intensity of electricity (2000-2022)",
     15: "Generation vs final consumption (2022)",
     16: "Consumption vs population and GDP growth (2000-2022)",
@@ -468,7 +469,10 @@ def build_index_html(df: pd.DataFrame, reg: pd.DataFrame) -> str:
         parts.append(f"<tr><td><code>{col}</code></td><td>{desc}</td></tr>\n")
     parts.append("</table>\n</section>\n")
 
-    parts.append("<section id=\"files\">\n<h2>Files</h2>\n<ul>\n")
+    parts.append("<section id=\"files\">\n<h2>Files</h2>\n")
+    parts.append("<p>Source repository: <a href=\"https://github.com/UNCHIKIT/"
+                 "CISC7204-GroupG-SemesterProject-Team03\">github.com/UNCHIKIT/"
+                 "CISC7204-GroupG-SemesterProject-Team03</a></p>\n<ul>\n")
     files = [
         ("team03/download_undata.py", "Step 1: download raw UN SDMX + CL_AREA."),
         ("team03/build_energy_dataset.py", "Step 2: parse XML into the cleaned CSV."),

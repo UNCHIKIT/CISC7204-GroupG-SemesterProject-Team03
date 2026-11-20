@@ -552,6 +552,68 @@ def fig_kaya_waterfall(df: pd.DataFrame) -> go.Figure:
     return fig
 
 
+# --------------------------------------------------------------------------- #
+# Slider variants (dashboard): year-by-year granularity for the year-vs-year
+# comparison charts. Used only in the dashboard; the static PNGs keep the
+# 1990-vs-2022 / 2000-vs-2022 view for the report.
+# --------------------------------------------------------------------------- #
+def fig_sector_structure_slider(df: pd.DataFrame) -> go.Figure:
+    rows = []
+    for yr in range(1990, 2023):
+        d = df[df["year"] == yr]
+        tot = d[SECTORS].sum().sum()
+        for s in SECTORS:
+            rows.append({"year": yr, "sector": s, "share": 100 * d[s].sum() / tot})
+    dd = pd.DataFrame(rows)
+    fig = px.bar(dd, x="sector", y="share", color="sector", animation_frame="year",
+                 title="World electricity consumption by sector, 1990-2022",
+                 labels={"share": "Share of total (%)", "sector": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set2)
+    fig.update_layout(template="plotly_white", showlegend=False, yaxis_ticksuffix="%")
+    fig.update_yaxes(range=[0, 60])
+    return fig
+
+
+def fig_generation_mix_slider() -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    world = ow[ow["Entity"] == "World"]
+    rows = []
+    for yr in range(2000, 2023):
+        w = world[world["Year"] == yr]
+        for s in MIX_SOURCES:
+            rows.append({"year": yr, "source": s, "share": float(w[s].sum())})
+    d = pd.DataFrame(rows)
+    d["share"] = 100 * d["share"] / d.groupby("year")["share"].transform("sum")
+    fig = px.bar(d, x="source", y="share", color="source", animation_frame="year",
+                 title="World electricity generation mix, 2000-2022",
+                 labels={"share": "Share of generation (%)", "source": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set1)
+    fig.update_layout(template="plotly_white", showlegend=False, yaxis_ticksuffix="%")
+    fig.update_yaxes(range=[0, 45])
+    return fig
+
+
+def fig_generation_mix_countries_slider() -> go.Figure:
+    ow = pd.read_csv(PROD_SOURCE)
+    rows = []
+    for yr in range(2000, 2023):
+        for country in MIX_COUNTRIES:
+            c = ow[(ow["Entity"] == country) & (ow["Year"] == yr)]
+            tot = float(c[MIX_SOURCES].sum().sum())
+            for s in MIX_SOURCES:
+                rows.append({"country": country, "year": yr, "source": s,
+                             "share": 100 * float(c[s].sum()) / tot if tot else 0.0})
+    d = pd.DataFrame(rows)
+    fig = px.bar(d, x="share", y="country", color="source", animation_frame="year",
+                 title="Electricity generation mix, largest countries 2000-2022",
+                 labels={"share": "Share of generation (%)", "country": ""},
+                 color_discrete_sequence=px.colors.qualitative.Set1,
+                 category_orders={"country": MIX_COUNTRIES})
+    fig.update_layout(template="plotly_white", barmode="stack", xaxis_ticksuffix="%")
+    fig.update_xaxes(range=[0, 100])
+    return fig
+
+
 def main() -> int:
     df = load_country_year()
     reg = load_region_year()
